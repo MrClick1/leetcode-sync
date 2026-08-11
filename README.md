@@ -6,6 +6,7 @@
 
 ```
 leetcode/
+  notes/             # 每道题的复盘笔记
   problems/
     001-two-sum/
       problem.md       # 题目描述、约束、示例
