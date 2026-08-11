@@ -23,11 +23,11 @@ static void check(const std::vector<std::vector<int>>& input,
     std::vector<std::vector<int>> got = input;
     Solution().setZeroes(got);
     if (got != expected) {
-        std::cerr << "FAIL:\n  input:    ";
+        std::cerr << "FAIL:\n  input:\n";
         printMatrix(input);
-        std::cerr << "\n  expected: ";
+        std::cerr << "\n  expected:\n";
         printMatrix(expected);
-        std::cerr << "\n  got:      ";
+        std::cerr << "\n  got:\n";
         printMatrix(got);
         std::cerr << "\n";
         std::exit(1);
@@ -56,6 +56,13 @@ int main() {
 
     // 陷阱 1：0 在 (0,1)，第一行/第一列会被用作标记
     check({{0, 1}, {1, 1}}, {{0, 0}, {0, 1}});
+
+    // 陷阱 3：0 在第一行但不在第一列（列 0 不应该被清零）
+    check({{1, 0}, {1, 1}}, {{0, 0}, {1, 0}});
+
+    // 陷阱 3b：3x3，0 在 (0,2)，只有第一行和第 2 列清零
+    check({{2, 1, 0}, {1, 3, 1}, {1, 1, 1}},
+          {{0, 0, 0}, {1, 3, 0}, {1, 1, 0}});
 
     // 陷阱 2：0 在 (2,2)，最后一行/最后一列清零，注意不要把标记行误清
     check({{1, 1, 1}, {1, 1, 1}, {1, 1, 0}},
