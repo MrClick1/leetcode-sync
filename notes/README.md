@@ -8,3 +8,4 @@
 | 48. 旋转图像 | ✅ 已解决 | [0048-rotate-image.md](0048-rotate-image.md) |
 | 54. 螺旋矩阵 | ✅ 已解决 | [0054-spiral-matrix.md](0054-spiral-matrix.md) |
 | 73. 矩阵置零 | ✅ 已解决 | [0073-set-matrix-zeroes.md](0073-set-matrix-zeroes.md) |
+| 240. 搜索二维矩阵 II | ✅ 已解决 | [0240-search-a-2d-matrix-ii.md](0240-search-a-2d-matrix-ii.md) |
