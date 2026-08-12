@@ -6,7 +6,7 @@
 static void check(std::vector<std::vector<char>> grid, int expected) {
     int got = Solution().numIslands(grid);
     if (got != expected) {
-        std::cerr << "FAIL: 期望 " << expected << " 实际 " << got << "\n";
+        std::cerr << "FAIL: expected " << expected << ", got " << got << "\n";
         std::exit(1);
     }
 }

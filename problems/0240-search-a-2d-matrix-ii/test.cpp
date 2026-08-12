@@ -8,8 +8,8 @@ static void check(std::vector<std::vector<int>> matrix, int target,
     bool got = Solution().searchMatrix(matrix, target);
     if (got != expected) {
         std::cerr << "FAIL: target=" << target
-                  << " 期望 " << (expected ? "true" : "false")
-                  << " 实际 " << (got ? "true" : "false") << "\n";
+                  << " expected " << (expected ? "true" : "false")
+                  << ", got " << (got ? "true" : "false") << "\n";
         std::exit(1);
     }
 }

@@ -7,7 +7,7 @@
 static void check(const std::vector<int>& nums, int target,
                   const std::vector<int>& got) {
     if (got.size() != 2) {
-        std::cerr << "FAIL: 返回值不是两个下标 (size=" << got.size() << ")\n";
+        std::cerr << "FAIL: result is not two indices (size=" << got.size() << ")\n";
         std::exit(1);
     }
     const int i = got[0];
@@ -15,7 +15,7 @@ static void check(const std::vector<int>& nums, int target,
     if (i == j || i < 0 || j < 0 ||
         static_cast<size_t>(i) >= nums.size() ||
         static_cast<size_t>(j) >= nums.size()) {
-        std::cerr << "FAIL: 下标不合法 [" << i << ", " << j << "]\n";
+        std::cerr << "FAIL: invalid indices [" << i << ", " << j << "]\n";
         std::exit(1);
     }
     if (nums[i] + nums[j] != target) {
