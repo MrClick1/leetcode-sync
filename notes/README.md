@@ -10,3 +10,4 @@
 | 73. 矩阵置零 | ✅ 已解决 | [0073-set-matrix-zeroes.md](0073-set-matrix-zeroes.md) |
 | 200. 岛屿数量 | ✅ 已解决 | [0200-number-of-islands.md](0200-number-of-islands.md) |
 | 240. 搜索二维矩阵 II | ✅ 已解决 | [0240-search-a-2d-matrix-ii.md](0240-search-a-2d-matrix-ii.md) |
+| 994. 腐烂的橘子 | ✅ 已解决 | [0994-rotting-oranges.md](0994-rotting-oranges.md) |

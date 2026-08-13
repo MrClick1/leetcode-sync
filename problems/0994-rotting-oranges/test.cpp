@@ -3,10 +3,26 @@
 
 #include "solution.cpp"
 
+static void printGrid(const std::vector<std::vector<int>>& g) {
+    std::cerr << "[";
+    for (size_t i = 0; i < g.size(); ++i) {
+        if (i) std::cerr << ",";
+        std::cerr << "[";
+        for (size_t j = 0; j < g[i].size(); ++j) {
+            if (j) std::cerr << ",";
+            std::cerr << g[i][j];
+        }
+        std::cerr << "]";
+    }
+    std::cerr << "]";
+}
+
 static void check(std::vector<std::vector<int>> grid, int expected) {
     int got = Solution().orangesRotting(grid);
     if (got != expected) {
-        std::cerr << "FAIL: expected " << expected << ", got " << got << "\n";
+        std::cerr << "FAIL: grid=";
+        printGrid(grid);
+        std::cerr << " expected " << expected << ", got " << got << "\n";
         std::exit(1);
     }
 }

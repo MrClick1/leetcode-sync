@@ -12,6 +12,7 @@
 | 73. 矩阵置零 | ✅ 已解决 | [notes/0073-set-matrix-zeroes.md](notes/0073-set-matrix-zeroes.md) |
 | 200. 岛屿数量 | ✅ 已解决（延伸练习待做） | [notes/0200-number-of-islands.md](notes/0200-number-of-islands.md) |
 | 240. 搜索二维矩阵 II | ✅ 已解决 | [notes/0240-search-a-2d-matrix-ii.md](notes/0240-search-a-2d-matrix-ii.md) |
+| 994. 腐烂的橘子 | ✅ 已解决 | [notes/0994-rotting-oranges.md](notes/0994-rotting-oranges.md) |
 
 - 语言：C++；本地编译器：g++（WinLibs/MinGW）
 - 已完成题目均通过本地固定用例 + 随机对拍
@@ -20,7 +21,7 @@
 ## 个人疑难点（重点）
 
 ### 1. 模拟类 / 网格遍历类题目苦手 ⚠️
-- 典型题：200 岛屿数量（BFS 模拟）、54 螺旋矩阵（边界收缩）、73 矩阵置零（原地标记）
+- 典型题：200 岛屿数量（BFS 模拟）、994 腐烂的橘子（多源 BFS 计时）、54 螺旋矩阵（边界收缩）、73 矩阵置零（原地标记）
 - 症状：不知道每轮怎么"走"、边界怎么缩、标记怎么不互相污染
 - 应对策略：
   - 先画图/手推小例子，把一轮的过程写出来再动代码
