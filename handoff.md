@@ -11,6 +11,7 @@
 | 54. 螺旋矩阵 | ✅ 已解决 | [notes/0054-spiral-matrix.md](notes/0054-spiral-matrix.md) |
 | 73. 矩阵置零 | ✅ 已解决 | [notes/0073-set-matrix-zeroes.md](notes/0073-set-matrix-zeroes.md) |
 | 200. 岛屿数量 | ✅ 已解决（延伸练习待做） | [notes/0200-number-of-islands.md](notes/0200-number-of-islands.md) |
+| 207. 课程表 | ✅ 已解决 | [notes/0207-course-schedule.md](notes/0207-course-schedule.md) |
 | 240. 搜索二维矩阵 II | ✅ 已解决 | [notes/0240-search-a-2d-matrix-ii.md](notes/0240-search-a-2d-matrix-ii.md) |
 | 994. 腐烂的橘子 | ✅ 已解决 | [notes/0994-rotting-oranges.md](notes/0994-rotting-oranges.md) |
 
@@ -39,6 +40,15 @@
 - `problem.md` 只放原题面，**不要放提示/解法方向**（会破坏练习）
 - 卡住超过 20 分钟才给提示；提示先给思路/结构，不直接给完整代码
 - 面试延伸（如 200 的沉岛法/DFS）记入 notes 的"延伸练习"并打勾
+
+## 待做延伸练习
+
+- [ ] 200. 岛屿数量：沉岛法（改 grid 省 visited）
+- [ ] 200. 岛屿数量：DFS 版
+- [ ] 994. 腐烂的橘子：不修改原网格（dist 数组版）
+- [ ] 994. 腐烂的橘子：输出每个格子腐烂时间矩阵
+- [ ] 207. 课程表：DFS 三色标记判环
+- [ ] 207. 课程表：210. 课程表 II（输出合法学习顺序）
 
 ## 工作流速查
 
