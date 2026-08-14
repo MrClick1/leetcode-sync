@@ -12,7 +12,7 @@
 | 73. 矩阵置零 | ✅ 已解决 | [notes/0073-set-matrix-zeroes.md](notes/0073-set-matrix-zeroes.md) |
 | 200. 岛屿数量 | ✅ 已解决（延伸练习待做） | [notes/0200-number-of-islands.md](notes/0200-number-of-islands.md) |
 | 207. 课程表 | ✅ 已解决 | [notes/0207-course-schedule.md](notes/0207-course-schedule.md) |
-| 208. 实现 Trie | ✅ 已解决 | [notes/0208-implement-trie-prefix-tree.md](notes/0208-implement-trie-prefix-tree.md) |
+| 208. 实现 Trie | ⚠️ 未完全掌握（需巩固） | [notes/0208-implement-trie-prefix-tree.md](notes/0208-implement-trie-prefix-tree.md) |
 | 240. 搜索二维矩阵 II | ✅ 已解决 | [notes/0240-search-a-2d-matrix-ii.md](notes/0240-search-a-2d-matrix-ii.md) |
 | 994. 腐烂的橘子 | ✅ 已解决 | [notes/0994-rotting-oranges.md](notes/0994-rotting-oranges.md) |
 
