@@ -12,6 +12,7 @@
 | 73. 矩阵置零 | ✅ 已解决 | [notes/0073-set-matrix-zeroes.md](notes/0073-set-matrix-zeroes.md) |
 | 200. 岛屿数量 | ✅ 已解决（延伸练习待做） | [notes/0200-number-of-islands.md](notes/0200-number-of-islands.md) |
 | 207. 课程表 | ✅ 已解决 | [notes/0207-course-schedule.md](notes/0207-course-schedule.md) |
+| 208. 实现 Trie | ✅ 已解决 | [notes/0208-implement-trie-prefix-tree.md](notes/0208-implement-trie-prefix-tree.md) |
 | 240. 搜索二维矩阵 II | ✅ 已解决 | [notes/0240-search-a-2d-matrix-ii.md](notes/0240-search-a-2d-matrix-ii.md) |
 | 994. 腐烂的橘子 | ✅ 已解决 | [notes/0994-rotting-oranges.md](notes/0994-rotting-oranges.md) |
 
@@ -49,6 +50,8 @@
 - [ ] 994. 腐烂的橘子：输出每个格子腐烂时间矩阵
 - [ ] 207. 课程表：DFS 三色标记判环
 - [ ] 207. 课程表：210. 课程表 II（输出合法学习顺序）
+- [ ] 208. Trie：211. 添加与搜索单词（支持 . 通配符）
+- [ ] 208. Trie：统计前缀数量 / 删除单词变体
 
 ## 工作流速查
 
