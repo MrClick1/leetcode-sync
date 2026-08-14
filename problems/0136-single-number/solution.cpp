@@ -5,7 +5,11 @@ using namespace std;
 class Solution {
 public:
     int singleNumber(vector<int>& nums) {
-        // TODO: 在这里实现你的解法
-        return 0;
+        int result = 0;
+        for (const int& num : nums) {
+            result ^= num;
+        }
+
+        return result;
     }
 };
