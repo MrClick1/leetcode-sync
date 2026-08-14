@@ -8,6 +8,7 @@
 | 48. 旋转图像 | ✅ 已解决 | [0048-rotate-image.md](0048-rotate-image.md) |
 | 54. 螺旋矩阵 | ✅ 已解决 | [0054-spiral-matrix.md](0054-spiral-matrix.md) |
 | 73. 矩阵置零 | ✅ 已解决 | [0073-set-matrix-zeroes.md](0073-set-matrix-zeroes.md) |
+| 136. 只出现一次的数字 | ✅ 已解决 | [0136-single-number.md](0136-single-number.md) |
 | 200. 岛屿数量 | ✅ 已解决 | [0200-number-of-islands.md](0200-number-of-islands.md) |
 | 207. 课程表 | ✅ 已解决 | [0207-course-schedule.md](0207-course-schedule.md) |
 | 208. 实现 Trie | ⚠️ 未完全掌握（需巩固） | [0208-implement-trie-prefix-tree.md](0208-implement-trie-prefix-tree.md) |

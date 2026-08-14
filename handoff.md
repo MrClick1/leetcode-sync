@@ -10,6 +10,7 @@
 | 48. 旋转图像 | ✅ 已解决 | [notes/0048-rotate-image.md](notes/0048-rotate-image.md) |
 | 54. 螺旋矩阵 | ✅ 已解决 | [notes/0054-spiral-matrix.md](notes/0054-spiral-matrix.md) |
 | 73. 矩阵置零 | ✅ 已解决 | [notes/0073-set-matrix-zeroes.md](notes/0073-set-matrix-zeroes.md) |
+| 136. 只出现一次的数字 | ✅ 已解决 | [notes/0136-single-number.md](notes/0136-single-number.md) |
 | 200. 岛屿数量 | ✅ 已解决（延伸练习待做） | [notes/0200-number-of-islands.md](notes/0200-number-of-islands.md) |
 | 207. 课程表 | ✅ 已解决 | [notes/0207-course-schedule.md](notes/0207-course-schedule.md) |
 | 208. 实现 Trie | ⚠️ 未完全掌握（需巩固） | [notes/0208-implement-trie-prefix-tree.md](notes/0208-implement-trie-prefix-tree.md) |
@@ -52,6 +53,8 @@
 - [ ] 207. 课程表：210. 课程表 II（输出合法学习顺序）
 - [ ] 208. Trie：211. 添加与搜索单词（支持 . 通配符）
 - [ ] 208. Trie：统计前缀数量 / 删除单词变体
+- [ ] 136. 位运算：137（其余出现三次，逐位 mod 3）
+- [ ] 136. 位运算：260（两个单数，XOR + 分组）
 
 ## 工作流速查
 
