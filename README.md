@@ -6,17 +6,20 @@
 
 ```
 leetcode/
-  handoff.md         # 个人疑难点与进度交接
-  notes/             # 每道题的复盘笔记
+  handoff.md                  # 个人疑难点与进度交接
+  notes/
+    README.md                 # 按日期汇总的复盘索引
+    2026-08-16/
+      0075-sort-colors.md     # 当天完成题目的复盘笔记
   problems/
-    001-two-sum/
-      problem.md       # 题目描述、约束、示例
-      solution.<ext>   # 你的解法
-      test.<ext>       # 本地测试用例（我出或你写）
-      notes.md         # 思路、复杂度、复盘（可选）
+    2026-08-16/
+      0031-next-permutation/
+        problem.md             # 题目描述、约束、示例
+        solution.<ext>         # 你的解法
+        test.<ext>             # 本地测试用例（我出或你写）
 ```
 
-每道题一个子目录，命名建议 `题号-题名`。
+题目和笔记先按练习日期 `YYYY-MM-DD` 归档；每道题一个子目录，命名为 `题号-题名`。这样可以直接打开前一天的日期目录集中复习。
 
 ## 练习流程
 
@@ -28,7 +31,7 @@ leetcode/
 ## 运行测试（以 73 题为例）
 
 ```powershell
-cd C:\Users\BHJ4SZH\Desktop\Study\leetcode\problems\0073-set-matrix-zeroes
+cd D:\Code\leetcode-sync\problems\2026-08-11\0073-set-matrix-zeroes
 g++ -std=c++17 test.cpp -o test.exe
 .\test.exe
 ```
@@ -43,5 +46,5 @@ g++ -std=c++17 test.cpp -o test.exe
 ## 约定
 
 - 只写你自己的解法，不要先查答案；卡住超过 20 分钟可以向我要提示
-- 每题完成后在 `notes.md` 里记录思路和复杂度，方便回头复习
+- 每题完成后在 `notes/YYYY-MM-DD/` 下记录思路和复杂度，方便按天复习
 - 不确定语言或题目难度时直接问我

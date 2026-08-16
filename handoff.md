@@ -4,20 +4,21 @@
 
 ## 当前进度
 
-| 题目 | 状态 | 复盘笔记 |
-|---|---|---|
-| 1. 两数之和 | ⏳ 未完成（脚手架已建） | — |
-| 48. 旋转图像 | ✅ 已解决 | [notes/0048-rotate-image.md](notes/0048-rotate-image.md) |
-| 54. 螺旋矩阵 | ✅ 已解决 | [notes/0054-spiral-matrix.md](notes/0054-spiral-matrix.md) |
-| 73. 矩阵置零 | ✅ 已解决 | [notes/0073-set-matrix-zeroes.md](notes/0073-set-matrix-zeroes.md) |
-| 75. 颜色分类 | ✅ 已解决 | [notes/0075-sort-colors.md](notes/0075-sort-colors.md) |
-| 136. 只出现一次的数字 | ✅ 已解决 | [notes/0136-single-number.md](notes/0136-single-number.md) |
-| 169. 多数元素 | ✅ 已解决 | [notes/0169-majority-element.md](notes/0169-majority-element.md) |
-| 200. 岛屿数量 | ✅ 已解决（延伸练习待做） | [notes/0200-number-of-islands.md](notes/0200-number-of-islands.md) |
-| 207. 课程表 | ✅ 已解决 | [notes/0207-course-schedule.md](notes/0207-course-schedule.md) |
-| 208. 实现 Trie | ⚠️ 未完全掌握（需巩固） | [notes/0208-implement-trie-prefix-tree.md](notes/0208-implement-trie-prefix-tree.md) |
-| 240. 搜索二维矩阵 II | ✅ 已解决 | [notes/0240-search-a-2d-matrix-ii.md](notes/0240-search-a-2d-matrix-ii.md) |
-| 994. 腐烂的橘子 | ✅ 已解决 | [notes/0994-rotting-oranges.md](notes/0994-rotting-oranges.md) |
+| 题目 | 练习日期 | 状态 | 复盘笔记 |
+|---|---|---|---|
+| 1. 两数之和 | 2026-08-10 | ⏳ 未完成（脚手架已建） | — |
+| 31. 下一个排列 | 2026-08-16 | ⏳ 进行中（脚手架已建） | — |
+| 48. 旋转图像 | 2026-08-11 | ✅ 已解决 | [notes/2026-08-11/0048-rotate-image.md](notes/2026-08-11/0048-rotate-image.md) |
+| 54. 螺旋矩阵 | 2026-08-11 | ✅ 已解决 | [notes/2026-08-11/0054-spiral-matrix.md](notes/2026-08-11/0054-spiral-matrix.md) |
+| 73. 矩阵置零 | 2026-08-11 | ✅ 已解决 | [notes/2026-08-11/0073-set-matrix-zeroes.md](notes/2026-08-11/0073-set-matrix-zeroes.md) |
+| 75. 颜色分类 | 2026-08-16 | ✅ 已解决 | [notes/2026-08-16/0075-sort-colors.md](notes/2026-08-16/0075-sort-colors.md) |
+| 136. 只出现一次的数字 | 2026-08-14 | ✅ 已解决 | [notes/2026-08-14/0136-single-number.md](notes/2026-08-14/0136-single-number.md) |
+| 169. 多数元素 | 2026-08-16 | ✅ 已解决 | [notes/2026-08-16/0169-majority-element.md](notes/2026-08-16/0169-majority-element.md) |
+| 200. 岛屿数量 | 2026-08-12 | ✅ 已解决（延伸练习待做） | [notes/2026-08-12/0200-number-of-islands.md](notes/2026-08-12/0200-number-of-islands.md) |
+| 207. 课程表 | 2026-08-13 | ✅ 已解决 | [notes/2026-08-13/0207-course-schedule.md](notes/2026-08-13/0207-course-schedule.md) |
+| 208. 实现 Trie | 2026-08-14 | ⚠️ 未完全掌握（需巩固） | [notes/2026-08-14/0208-implement-trie-prefix-tree.md](notes/2026-08-14/0208-implement-trie-prefix-tree.md) |
+| 240. 搜索二维矩阵 II | 2026-08-11 | ✅ 已解决 | [notes/2026-08-11/0240-search-a-2d-matrix-ii.md](notes/2026-08-11/0240-search-a-2d-matrix-ii.md) |
+| 994. 腐烂的橘子 | 2026-08-13 | ✅ 已解决 | [notes/2026-08-13/0994-rotting-oranges.md](notes/2026-08-13/0994-rotting-oranges.md) |
 
 - 语言：C++；本地编译器：g++（WinLibs/MinGW）
 - 已完成题目均通过本地测试；部分题目已做随机对拍
@@ -62,7 +63,7 @@
 
 ## 工作流速查
 
-- 每道题目录：`problems/题号-题名/`（problem.md、solution.cpp、test.cpp）
-- 完成一道 → Codex review + 随机对拍 → 写复盘笔记 `notes/`
+- 每道题目录：`problems/YYYY-MM-DD/题号-题名/`（problem.md、solution.cpp、test.cpp）
+- 完成一道 → Codex review + 测试 → 写复盘笔记 `notes/YYYY-MM-DD/`
 - 一批做完 → `git add -A && git commit && git push`
 - 新会话先读：本文件 + [notes/README.md](notes/README.md)
