@@ -11,6 +11,7 @@
 | 54. 螺旋矩阵 | ✅ 已解决 | [notes/0054-spiral-matrix.md](notes/0054-spiral-matrix.md) |
 | 73. 矩阵置零 | ✅ 已解决 | [notes/0073-set-matrix-zeroes.md](notes/0073-set-matrix-zeroes.md) |
 | 136. 只出现一次的数字 | ✅ 已解决 | [notes/0136-single-number.md](notes/0136-single-number.md) |
+| 169. 多数元素 | ✅ 已解决 | [notes/0169-majority-element.md](notes/0169-majority-element.md) |
 | 200. 岛屿数量 | ✅ 已解决（延伸练习待做） | [notes/0200-number-of-islands.md](notes/0200-number-of-islands.md) |
 | 207. 课程表 | ✅ 已解决 | [notes/0207-course-schedule.md](notes/0207-course-schedule.md) |
 | 208. 实现 Trie | ⚠️ 未完全掌握（需巩固） | [notes/0208-implement-trie-prefix-tree.md](notes/0208-implement-trie-prefix-tree.md) |
@@ -18,8 +19,8 @@
 | 994. 腐烂的橘子 | ✅ 已解决 | [notes/0994-rotting-oranges.md](notes/0994-rotting-oranges.md) |
 
 - 语言：C++；本地编译器：g++（WinLibs/MinGW）
-- 已完成题目均通过本地固定用例 + 随机对拍
-- GitHub：远程 `MrClick1/my-leetcode`，**记得 push 未推送的进度**
+- 已完成题目均通过本地测试；部分题目已做随机对拍
+- GitHub：远程 `MrClick1/leetcode-sync`，**记得 push 未推送的进度**
 
 ## 个人疑难点（重点）
 
@@ -36,6 +37,8 @@
 - `break` 只跳出内层循环 → 多岛合并 / 漏岛（200）
 - 清零时标记区被数据污染（73）
 - 循环变量遮蔽外层 `i`，误导自己（200）
+- 选择新候选人时忘记给第一票，导致程序退化为返回最后一个元素（169）
+- 测试数据特征过于一致会掩盖错误；应加入能区分错误行为的反例（169）
 - 测试输出中文在 Windows 终端乱码（GBK 代码页），输出语句用英文
 
 ### 3. 学习偏好
