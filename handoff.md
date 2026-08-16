@@ -10,6 +10,7 @@
 | 48. 旋转图像 | ✅ 已解决 | [notes/0048-rotate-image.md](notes/0048-rotate-image.md) |
 | 54. 螺旋矩阵 | ✅ 已解决 | [notes/0054-spiral-matrix.md](notes/0054-spiral-matrix.md) |
 | 73. 矩阵置零 | ✅ 已解决 | [notes/0073-set-matrix-zeroes.md](notes/0073-set-matrix-zeroes.md) |
+| 75. 颜色分类 | ✅ 已解决 | [notes/0075-sort-colors.md](notes/0075-sort-colors.md) |
 | 136. 只出现一次的数字 | ✅ 已解决 | [notes/0136-single-number.md](notes/0136-single-number.md) |
 | 169. 多数元素 | ✅ 已解决 | [notes/0169-majority-element.md](notes/0169-majority-element.md) |
 | 200. 岛屿数量 | ✅ 已解决（延伸练习待做） | [notes/0200-number-of-islands.md](notes/0200-number-of-islands.md) |
