@@ -18,6 +18,7 @@
 | 207. 课程表 | 2026-08-13 | ✅ 已解决 | [notes/2026-08-13/0207-course-schedule.md](notes/2026-08-13/0207-course-schedule.md) |
 | 208. 实现 Trie | 2026-08-14 | ⚠️ 未完全掌握（需巩固） | [notes/2026-08-14/0208-implement-trie-prefix-tree.md](notes/2026-08-14/0208-implement-trie-prefix-tree.md) |
 | 240. 搜索二维矩阵 II | 2026-08-11 | ✅ 已解决 | [notes/2026-08-11/0240-search-a-2d-matrix-ii.md](notes/2026-08-11/0240-search-a-2d-matrix-ii.md) |
+| 287. 寻找重复数 | 2026-08-16 | ✅ 已解决（Floyd 证明需复习） | [notes/2026-08-16/0287-find-the-duplicate-number.md](notes/2026-08-16/0287-find-the-duplicate-number.md) |
 | 994. 腐烂的橘子 | 2026-08-13 | ✅ 已解决 | [notes/2026-08-13/0994-rotting-oranges.md](notes/2026-08-13/0994-rotting-oranges.md) |
 
 - 语言：C++；本地编译器：g++（WinLibs/MinGW）
@@ -41,6 +42,7 @@
 - 循环变量遮蔽外层 `i`，误导自己（200）
 - 选择新候选人时忘记给第一票，导致程序退化为返回最后一个元素（169）
 - 测试数据特征过于一致会掩盖错误；应加入能区分错误行为的反例（169）
+- Floyd 第二阶段寻找环入口的距离证明仍不够熟，需要结合具体路径表格复习（287）
 - 测试输出中文在 Windows 终端乱码（GBK 代码页），输出语句用英文
 
 ### 3. 学习偏好

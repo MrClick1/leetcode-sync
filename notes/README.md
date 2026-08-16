@@ -9,6 +9,7 @@
 | 31. 下一个排列 | ✅ 已解决 | [2026-08-16/0031-next-permutation.md](2026-08-16/0031-next-permutation.md) |
 | 75. 颜色分类 | ✅ 已解决 | [2026-08-16/0075-sort-colors.md](2026-08-16/0075-sort-colors.md) |
 | 169. 多数元素 | ✅ 已解决 | [2026-08-16/0169-majority-element.md](2026-08-16/0169-majority-element.md) |
+| 287. 寻找重复数 | ✅ 已解决（证明需复习） | [2026-08-16/0287-find-the-duplicate-number.md](2026-08-16/0287-find-the-duplicate-number.md) |
 
 ## 2026-08-14
 
