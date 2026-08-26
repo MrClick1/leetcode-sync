@@ -1,71 +1,65 @@
-# 刷题交接文档（handoff）
+# HANDOFF（本地会话交接）
 
-> 用途：给"另一个我"（家里的笔记本 / 新的 Codex 会话）快速同步进度和个人易错点。新会话开始时先读本文件 + notes/README.md。
+> 用途：在同一台机器上，让另一个 Codex / 终端会话快速接手当前工作状态。
+> 新会话开始工作时，先读本文件，再按需读 notes/README.md 和题目目录中的代码。
 
-## 当前进度
+## 当前进行中
 
-| 题目 | 练习日期 | 状态 | 复盘笔记 |
-|---|---|---|---|
-| 1. 两数之和 | 2026-08-10 | ⏳ 未完成（脚手架已建） | — |
-| 31. 下一个排列 | 2026-08-16 | ✅ 已解决 | [notes/2026-08-16/0031-next-permutation.md](notes/2026-08-16/0031-next-permutation.md) |
-| 48. 旋转图像 | 2026-08-11 | ✅ 已解决 | [notes/2026-08-11/0048-rotate-image.md](notes/2026-08-11/0048-rotate-image.md) |
-| 54. 螺旋矩阵 | 2026-08-11 | ✅ 已解决 | [notes/2026-08-11/0054-spiral-matrix.md](notes/2026-08-11/0054-spiral-matrix.md) |
-| 73. 矩阵置零 | 2026-08-11 | ✅ 已解决 | [notes/2026-08-11/0073-set-matrix-zeroes.md](notes/2026-08-11/0073-set-matrix-zeroes.md) |
-| 75. 颜色分类 | 2026-08-16 | ✅ 已解决 | [notes/2026-08-16/0075-sort-colors.md](notes/2026-08-16/0075-sort-colors.md) |
-| 136. 只出现一次的数字 | 2026-08-14 | ✅ 已解决 | [notes/2026-08-14/0136-single-number.md](notes/2026-08-14/0136-single-number.md) |
-| 169. 多数元素 | 2026-08-16 | ✅ 已解决 | [notes/2026-08-16/0169-majority-element.md](notes/2026-08-16/0169-majority-element.md) |
-| 200. 岛屿数量 | 2026-08-12 | ✅ 已解决（延伸练习待做） | [notes/2026-08-12/0200-number-of-islands.md](notes/2026-08-12/0200-number-of-islands.md) |
-| 207. 课程表 | 2026-08-13 | ✅ 已解决 | [notes/2026-08-13/0207-course-schedule.md](notes/2026-08-13/0207-course-schedule.md) |
-| 208. 实现 Trie | 2026-08-14 | ⚠️ 未完全掌握（需巩固） | [notes/2026-08-14/0208-implement-trie-prefix-tree.md](notes/2026-08-14/0208-implement-trie-prefix-tree.md) |
-| 240. 搜索二维矩阵 II | 2026-08-11 | ✅ 已解决 | [notes/2026-08-11/0240-search-a-2d-matrix-ii.md](notes/2026-08-11/0240-search-a-2d-matrix-ii.md) |
-| 287. 寻找重复数 | 2026-08-16 | ✅ 已解决（Floyd 证明需复习） | [notes/2026-08-16/0287-find-the-duplicate-number.md](notes/2026-08-16/0287-find-the-duplicate-number.md) |
-| 994. 腐烂的橘子 | 2026-08-13 | ✅ 已解决 | [notes/2026-08-13/0994-rotting-oranges.md](notes/2026-08-13/0994-rotting-oranges.md) |
+暂无，等待用户指定下一题。
 
-- 语言：C++；本地编译器：g++（WinLibs/MinGW）
-- 已完成题目均通过本地测试；部分题目已做随机对拍
-- GitHub：远程 `MrClick1/leetcode-sync`，**记得 push 未推送的进度**
+## 刚完成
 
-## 个人疑难点（重点）
+**108. 将有序数组转换为二叉搜索树（2026-08-26）✅**
 
-### 1. 模拟类 / 网格遍历类题目苦手 ⚠️
-- 典型题：200 岛屿数量（BFS 模拟）、994 腐烂的橘子（多源 BFS 计时）、54 螺旋矩阵（边界收缩）、73 矩阵置零（原地标记）
-- 症状：不知道每轮怎么"走"、边界怎么缩、标记怎么不互相污染
-- 应对策略：
-  - 先画图/手推小例子，把一轮的过程写出来再动代码
-  - 记住网格题通用零件：方向数组、visited/沉岛、四边界收缩
-  - 模拟题最容易错的是"停止条件"和"防重复"，写码前先想清楚这两点
+- 目录：problems/2026-08-26/0108-convert-sorted-array-to-bst/
+- 使用中点作为根节点，递归构造左右区间。
+- 固定测试全部通过。
+- 5000 组随机严格递增数组测试全部通过，验证了中序遍历和高度平衡。
+- 复盘笔记已写入 notes/2026-08-26/0108-convert-sorted-array-to-bst.md。
 
-### 2. 具体踩过的坑（容易复发）
-- BFS 忘写 `que.pop()` → 死循环 TLE（200）
-- `break` 只跳出内层循环 → 多岛合并 / 漏岛（200）
-- 清零时标记区被数据污染（73）
-- 循环变量遮蔽外层 `i`，误导自己（200）
-- 选择新候选人时忘记给第一票，导致程序退化为返回最后一个元素（169）
-- 测试数据特征过于一致会掩盖错误；应加入能区分错误行为的反例（169）
-- Floyd 第二阶段寻找环入口的距离证明仍不够熟，需要结合具体路径表格复习（287）
-- 测试输出中文在 Windows 终端乱码（GBK 代码页），输出语句用英文
+**543. 二叉树的直径（2026-08-26）✅**
 
-### 3. 学习偏好
-- `problem.md` 只放原题面，**不要放提示/解法方向**（会破坏练习）
-- 卡住超过 20 分钟才给提示；提示先给思路/结构，不直接给完整代码
-- 面试延伸（如 200 的沉岛法/DFS）记入 notes 的"延伸练习"并打勾
+- 后序 depth 递归，全局 ans = max(ans, 左高度 + 右高度)。
+- 固定用例和 2000 棵随机树对拍已通过。
+- 复盘笔记已写入 notes/2026-08-26/0543-diameter-of-binary-tree.md。
 
-## 待做延伸练习
+## Git 状态
 
-- [ ] 200. 岛屿数量：沉岛法（改 grid 省 visited）
-- [ ] 200. 岛屿数量：DFS 版
-- [ ] 994. 腐烂的橘子：不修改原网格（dist 数组版）
-- [ ] 994. 腐烂的橘子：输出每个格子腐烂时间矩阵
-- [ ] 207. 课程表：DFS 三色标记判环
-- [ ] 207. 课程表：210. 课程表 II（输出合法学习顺序）
-- [ ] 208. Trie：211. 添加与搜索单词（支持 . 通配符）
-- [ ] 208. Trie：统计前缀数量 / 删除单词变体
-- [ ] 136. 位运算：137（其余出现三次，逐位 mod 3）
-- [ ] 136. 位运算：260（两个单数，XOR + 分组）
+- 本地 main 与 origin/main 一致，HEAD = 6d35a07。
+- 当前练习改动尚未提交：543 和 108 的解法、复盘笔记、notes/README.md、handoff.md、HANDOFF.md 以及 .gitignore。
+- 用户自己执行 git add、commit、push；不要主动帮 push，只有用户明确要求时才做。
+- 旧的平铺题目目录已清理，新题目统一归档到 problems/YYYY-MM-DD/。
 
-## 工作流速查
+## 环境与命令
 
-- 每道题目录：`problems/YYYY-MM-DD/题号-题名/`（problem.md、solution.cpp、test.cpp）
-- 完成一道 → Codex review + 测试 → 写复盘笔记 `notes/YYYY-MM-DD/`
-- 一批做完 → `git add -A && git commit && git push`
-- 新会话先读：本文件 + [notes/README.md](notes/README.md)
+### 编译 / 运行
+
+g++ 不在默认 PATH 里，要用完整路径：
+
+C:\Users\BHJ4SZH\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\g++.exe
+
+在题目目录中运行：
+
+g++.exe -std=c++17 test.cpp -o test.exe
+.\test.exe
+
+### 文件写入
+
+- apply_patch 在此环境可能因 sandbox split-writable-roots 失败。
+- 如果 apply_patch 失败，写文件使用 PowerShell 的 UTF-8 无 BOM 方式。
+- 测试和程序输出使用英文，避免 Windows 终端编码问题。
+- PowerShell 里不要使用 $HOME 作为变量。
+
+## 工作流约定
+
+- problem.md 只放原题面，绝不写提示或解法方向。
+- 用户卡住时先给思路和结构，不直接给完整代码。
+- 每完成一题：review → 本地测试 → 随机验证 → 更新 notes/YYYY-MM-DD/、notes/README.md 和交接文档。
+- 当前题目完成后，下一题等待用户指定，不要擅自开始新题。
+- 用户负责 Git 提交和推送。
+
+## 下次交接前更新
+
+- [x] 108 已完成并写入复盘笔记。
+- [x] notes/README.md、handoff.md、HANDOFF.md 已同步。
+- [ ] 等待用户指定下一题。
