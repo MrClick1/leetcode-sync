@@ -9,12 +9,18 @@
 
 ## 刚完成
 
+**98. 验证二叉搜索树（2026-08-26，完成验证于 2026-08-28）✅**
+
+- 目录：problems/2026-08-26/0098-validate-binary-search-tree/
+- 使用 long long 上下界递归验证所有祖先约束，严格拒绝重复值。
+- 固定测试全部通过。
+- 10000 棵随机二叉树与独立的迭代中序遍历参考实现对比全部通过。
+- 复盘笔记已写入 notes/2026-08-26/0098-validate-binary-search-tree.md。
+
 **108. 将有序数组转换为二叉搜索树（2026-08-26）✅**
 
-- 目录：problems/2026-08-26/0108-convert-sorted-array-to-bst/
 - 使用中点作为根节点，递归构造左右区间。
-- 固定测试全部通过。
-- 5000 组随机严格递增数组测试全部通过，验证了中序遍历和高度平衡。
+- 固定测试和 5000 组随机严格递增数组测试全部通过。
 - 复盘笔记已写入 notes/2026-08-26/0108-convert-sorted-array-to-bst.md。
 
 **543. 二叉树的直径（2026-08-26）✅**
@@ -25,10 +31,10 @@
 
 ## Git 状态
 
-- 本地 main 与 origin/main 一致，HEAD = 6d35a07。
-- 当前练习改动尚未提交：543 和 108 的解法、复盘笔记、notes/README.md、handoff.md、HANDOFF.md 以及 .gitignore。
-- 用户自己执行 git add、commit、push；不要主动帮 push，只有用户明确要求时才做。
-- 旧的平铺题目目录已清理，新题目统一归档到 problems/YYYY-MM-DD/。
+- 当前工作分支为 main，远程分支为 origin/main。
+- 98 的代码、复盘笔记和索引已经完成；同步状态以 git status 为准。
+- 用户自己执行 git add、commit、push；只有用户明确要求时才执行。
+- 新题目统一归档到 problems/YYYY-MM-DD/。
 
 ## 环境与命令
 
@@ -60,6 +66,6 @@ g++.exe -std=c++17 test.cpp -o test.exe
 
 ## 下次交接前更新
 
-- [x] 108 已完成并写入复盘笔记。
+- [x] 98 已完成并写入复盘笔记。
 - [x] notes/README.md、handoff.md、HANDOFF.md 已同步。
 - [ ] 等待用户指定下一题。

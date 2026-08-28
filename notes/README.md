@@ -6,6 +6,7 @@
 
 | 题目 | 状态 | 笔记 |
 |---|---|---|
+| 98. 验证二叉搜索树 | ✅ 已解决 | [2026-08-26/0098-validate-binary-search-tree.md](2026-08-26/0098-validate-binary-search-tree.md) |
 | 108. 将有序数组转换为二叉搜索树 | ✅ 已解决 | [2026-08-26/0108-convert-sorted-array-to-bst.md](2026-08-26/0108-convert-sorted-array-to-bst.md) |
 | 543. 二叉树的直径 | ✅ 已解决 | [2026-08-26/0543-diameter-of-binary-tree.md](2026-08-26/0543-diameter-of-binary-tree.md) |
 
