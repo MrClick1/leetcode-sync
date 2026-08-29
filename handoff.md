@@ -9,6 +9,14 @@
 
 ## 刚完成
 
+**76. 最小覆盖子串（2026-08-29）✅**
+
+- 当前在家使用 LeetCode 网页端练习，本题未创建本地代码脚手架。
+- 使用 `need` / `window` 双哈希表与 `required` / `formed` 状态实现可变长度滑动窗口。
+- LeetCode 全部测试通过，复杂度为 `O(|s| + |t|)`。
+- 学习过程中补充了 `unordered_map::size()`、`static_cast`、C++ 命名类型转换和 `substr` 越界等语法笔记。
+- 复盘笔记已写入 notes/2026-08-29/0076-minimum-window-substring.md。
+
 **98. 验证二叉搜索树（2026-08-26，完成验证于 2026-08-28）✅**
 
 - 目录：problems/2026-08-26/0098-validate-binary-search-tree/
@@ -33,7 +41,7 @@
 
 - 当前工作分支为 main，远程分支为 origin/main。
 - 98 的代码、复盘笔记和索引已经完成；同步状态以 git status 为准。
-- 用户自己执行 git add、commit、push；只有用户明确要求时才执行。
+- 用户已明确要求：每道题完成并更新笔记后，自动执行 git add、commit、push。
 - 新题目统一归档到 problems/YYYY-MM-DD/。
 
 ## 环境与命令
@@ -61,11 +69,13 @@ g++.exe -std=c++17 test.cpp -o test.exe
 - problem.md 只放原题面，绝不写提示或解法方向。
 - 用户卡住时先给思路和结构，不直接给完整代码。
 - 每完成一题：review → 本地测试 → 随机验证 → 更新 notes/YYYY-MM-DD/、notes/README.md 和交接文档。
+- 当前在家学习时默认直接使用 LeetCode 网页端，只记录 notes，不创建本地题目脚手架；用户另有要求时除外。
 - 当前题目完成后，下一题等待用户指定，不要擅自开始新题。
-- 用户负责 Git 提交和推送。
+- 每道题完成且检查无误后，按用户要求自动提交并推送相关变更。
 
 ## 下次交接前更新
 
 - [x] 98 已完成并写入复盘笔记。
+- [x] 76 已完成并写入复盘笔记，C++ 语法参考文档已更新。
 - [x] notes/README.md、handoff.md、HANDOFF.md 已同步。
 - [ ] 等待用户指定下一题。
