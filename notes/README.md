@@ -19,11 +19,17 @@
 |---|---|---|
 | 24. 两两交换链表中的节点 | ✅ 已解决 | [2026-08-31/0024-swap-nodes-in-pairs.md](2026-08-31/0024-swap-nodes-in-pairs.md) |
 
+## 2026-08-30
+
+| 题目 | 状态 | 笔记 |
+|---|---|---|
+| 25. K 个一组翻转链表 | 📝 初始思路记录 | [2026-08-30/0025-reverse-nodes-in-k-group.md](2026-08-30/0025-reverse-nodes-in-k-group.md) |
+
 ## 2026-08-29
 
 | 题目 | 状态 | 笔记 |
 |---|---|---|
-| 41. 缺失的第一个正数 | ⏳ 进行中 | [2026-08-29/0041-first-missing-positive.md](2026-08-29/0041-first-missing-positive.md) |
+| 41. 缺失的第一个正数 | ✅ 已解决 | [2026-08-29/0041-first-missing-positive.md](2026-08-29/0041-first-missing-positive.md) |
 | 76. 最小覆盖子串 | ✅ 已解决 | [2026-08-29/0076-minimum-window-substring.md](2026-08-29/0076-minimum-window-substring.md) |
 
 ## 2026-08-26
