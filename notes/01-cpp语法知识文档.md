@@ -174,7 +174,120 @@ while (!que.empty()) {
 }
 ```
 
-### 1.5 STL 容器的共同规则
+### 1.5 `priority_queue`：优先队列 / 堆
+
+使用 `priority_queue` 需要包含：
+
+```cpp
+#include <queue>
+```
+
+#### 默认是大顶堆
+
+```cpp
+priority_queue<int> maxHeap;
+
+maxHeap.push(3);
+maxHeap.push(1);
+maxHeap.push(5);
+
+int largest = maxHeap.top(); // 5，只读取堆顶
+maxHeap.pop();               // 删除堆顶，不返回元素
+```
+
+常用接口：
+
+```cpp
+maxHeap.push(value); // 插入元素
+maxHeap.emplace(value);
+maxHeap.top();       // 读取优先级最高的元素
+maxHeap.pop();       // 删除堆顶，返回 void
+maxHeap.empty();     // 是否为空
+maxHeap.size();      // 元素数量，返回 size_t
+```
+
+和 `queue` 一样，`pop()` 只删除、不返回元素。应该先 `top()`，再 `pop()`：
+
+```cpp
+while (!maxHeap.empty()) {
+    int current = maxHeap.top();
+    maxHeap.pop();
+
+    // 处理 current
+}
+```
+
+调用 `top()` 或 `pop()` 前必须确认堆不为空。
+
+#### 基本类型的小顶堆
+
+`priority_queue` 的三个模板参数依次是元素类型、底层容器和比较器：
+
+```cpp
+#include <functional>
+#include <vector>
+
+priority_queue<int, vector<int>, greater<int>> minHeap;
+```
+
+此时 `minHeap.top()` 返回最小值。
+
+```cpp
+minHeap.push(3);
+minHeap.push(1);
+minHeap.push(5);
+
+int smallest = minHeap.top(); // 1
+```
+
+#### 自定义类型的小顶堆
+
+存放指针或自定义结构体时，需要提供比较器。例如按照链表节点的 `val` 建立小顶堆：
+
+```cpp
+struct CompareListNode {
+    bool operator()(const ListNode* left, const ListNode* right) const {
+        return left->val > right->val;
+    }
+};
+
+priority_queue<
+    ListNode*,
+    vector<ListNode*>,
+    CompareListNode
+> minHeap;
+```
+
+比较器最容易写反。可以这样理解：
+
+```text
+Compare(left, right) 返回 true
+表示 left 的优先级比 right 低
+```
+
+所以小顶堆使用 `left->val > right->val`：值更大的节点优先级更低，值最小的节点就位于堆顶。值相等时顺序不确定，但不影响有序结果。
+
+第 23 题中，只把每条非空链表当前的头节点放入最小堆：
+
+```cpp
+for (ListNode* head : lists) {
+    if (head != nullptr) {
+        minHeap.push(head);
+    }
+}
+```
+
+每次取出堆顶节点后，如果它还有下一个节点，就将 `node->next` 放入堆中。堆中最多保存 `k` 个节点。
+
+#### 复杂度和限制
+
+- `top()`：O(1)
+- `push()` / `emplace()`：O(log n)
+- `pop()`：O(log n)
+- `empty()` / `size()`：O(1)
+- 不支持像 `vector` 一样通过下标访问，也不提供直接遍历接口
+
+### 1.6 STL 容器的共同规则
 
 #### `size()` 通常返回 `size_t`
 
@@ -540,6 +653,10 @@ using namespace std;
 | 哈希计数 | `need[c]++` | 不存在时自动插入并初始化为 0 |
 | 队列读取队首 | `que.front()` | 不删除元素 |
 | 队列删除队首 | `que.pop()` | 返回 `void` |
+| 大顶堆 | `priority_queue<int> heap` | 默认堆顶是最大值 |
+| 小顶堆 | `priority_queue<int, vector<int>, greater<int>> heap` | 堆顶是最小值 |
+| 读取堆顶 | `heap.top()` | 不删除元素，调用前检查非空 |
+| 删除堆顶 | `heap.pop()` | 返回 `void` |
 
 ### `<algorithm>`
 
