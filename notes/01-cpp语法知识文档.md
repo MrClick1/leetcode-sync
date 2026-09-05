@@ -135,6 +135,30 @@ for (const auto& [key, value] : need) {
 
 这是 C++17 的结构化绑定语法。
 
+如果不使用结构化绑定，可以把每个元素看作 `pair<const Key, T>`：
+
+```cpp
+for (const auto& entry : need) {
+    cout << entry.first << ": " << entry.second << '\n';
+}
+```
+
+使用迭代器时，迭代器指向键值对，因此通过 `->first` 和 `->second` 访问：
+
+```cpp
+for (auto it = need.begin(); it != need.end(); ++it) {
+    cout << it->first << ": " << it->second << '\n';
+}
+```
+
+如果要修改 value，可以使用非常量引用；key 仍然不能修改：
+
+```cpp
+for (auto& [key, value] : need) {
+    value++;
+}
+```
+
 #### 常用操作
 
 ```cpp
@@ -146,7 +170,50 @@ need.clear();      // 清空
 
 `unordered_map` 的查找、插入和删除平均为 O(1)，最坏情况下可能退化。
 
-### 1.4 `queue`：队列
+### 1.4 `unordered_set`：无序集合
+
+`unordered_set` 只保存 key，不保存 value，插入重复元素时会自动去重：
+
+```cpp
+unordered_set<int> uset;
+uset.insert(3);
+uset.insert(3); // 不会产生第二个 3
+```
+
+#### 遍历 `unordered_set`
+
+最常用的是范围 `for`：
+
+```cpp
+for (const auto& value : uset) {
+    cout << value << '\n';
+}
+```
+
+也可以使用迭代器：
+
+```cpp
+for (auto it = uset.begin(); it != uset.end(); ++it) {
+    cout << *it << '\n';
+}
+```
+
+`unordered_set` 的遍历顺序不保证有序，也不保证每次运行都相同。如果需要升序结果，应复制到 `vector` 后排序，或直接使用 `set`。
+
+#### 常用操作
+
+```cpp
+uset.count(value); // 存在返回 1，不存在返回 0
+uset.find(value);  // 返回迭代器，找不到时返回 end()
+uset.erase(value);
+uset.size();
+uset.empty();
+uset.clear();
+```
+
+集合元素不能通过迭代器直接修改，因为修改后可能破坏哈希结构；需要删除旧值再插入新值。
+
+### 1.5 `queue`：队列
 
 ```cpp
 queue<int> que;
@@ -174,7 +241,7 @@ while (!que.empty()) {
 }
 ```
 
-### 1.5 `priority_queue`：优先队列 / 堆
+### 1.6 `priority_queue`：优先队列 / 堆
 
 使用 `priority_queue` 需要包含：
 
@@ -287,7 +354,7 @@ for (ListNode* head : lists) {
 - `empty()` / `size()`：O(1)
 - 不支持像 `vector` 一样通过下标访问，也不提供直接遍历接口
 
-### 1.6 STL 容器的共同规则
+### 1.7 STL 容器的共同规则
 
 #### `size()` 通常返回 `size_t`
 
