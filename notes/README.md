@@ -11,6 +11,7 @@
 | 题目 | 状态 | 笔记 |
 |---|---|---|
 | 114. 二叉树展开为链表 | ✅ 已解决（含 O(1) 空间进阶） | [2026-09-05/0114-flatten-binary-tree-to-linked-list.md](2026-09-05/0114-flatten-binary-tree-to-linked-list.md) |
+| 437. 路径总和 III | ✅ 已解决 | [2026-09-05/0437-path-sum-iii.md](2026-09-05/0437-path-sum-iii.md) |
 
 ## 2026-09-04
 
