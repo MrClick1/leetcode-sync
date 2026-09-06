@@ -34,6 +34,39 @@ nums.at(i);        // 越界时抛出异常
 nums.clear();      // 删除全部元素
 ```
 
+#### 一次添加多个元素
+
+`push_back` 一次只能添加一个 `vector` 元素。`vector<int>` 的元素类型是 `int`：
+
+```cpp
+vector<int> nums;
+nums.push_back(1);
+nums.push_back(2);
+nums.push_back(3);
+```
+
+如果想用一条语句连续添加多个整数，可以使用 `insert` 和花括号初始化列表：
+
+```cpp
+nums.insert(nums.end(), {1, 2, 3});
+```
+
+`{1, 2, 3}` 是花括号初始化列表，具体类型由上下文决定；这里会作为 `initializer_list<int>` 传给 `insert`。它不是一个可以脱离上下文单独声明的固定容器类型。
+
+如果外层容器的元素类型本身是 `vector<int>`，则 `push_back` 可以接收一个 `vector<int>`：
+
+```cpp
+vector<vector<int>> groups;
+groups.push_back({1, 2, 3}); // 添加一个 vector<int>
+```
+
+但下面的写法不成立，因为 `nums.push_back` 需要一个 `int`，而不是三个 `int`：
+
+```cpp
+// vector<int> nums;
+// nums.push_back({1, 2, 3});
+```
+
 #### `reserve` 与 `resize`
 
 ```cpp
@@ -744,6 +777,43 @@ using namespace std;
 #include <unordered_map>
 #include <vector>
 ```
+
+### 3.10 前置 `++`、后置 `++` 与同一表达式多次访问
+
+单独理解时：
+
+```cpp
+int a = left++; // 先把 left 的旧值赋给 a，再让 left 加 1
+int b = ++left; // 先让 left 加 1，再把新值赋给 b
+```
+
+但是，下面两种写法都不能使用：
+
+```cpp
+nums[left] == nums[left++];
+nums[left] == nums[++left];
+```
+
+原因是 `left` 一方面被 `nums[left]` 读取，另一方面又在同一个表达式中被递增；`==` 的两个操作数之间没有规定的求值先后顺序。读取和修改之间没有被正确排序，属于未定义行为。不能依赖某次运行中看起来的结果，也不能判断“前面的 `left` 一定会不会受到 `++` 影响”。
+
+如果想比较当前位置和下一个位置，应明确拆开：
+
+```cpp
+if (left + 1 < static_cast<int>(nums.size()) &&
+    nums[left] == nums[left + 1]) {
+    ++left;
+}
+```
+
+如果确实需要先保存旧下标，再递增，也应分成多条语句：
+
+```cpp
+int oldLeft = left;
+++left;
+bool same = nums[oldLeft] == nums[left];
+```
+
+原则：同一条表达式中不要同时读取某个变量并修改它；把递增、下标访问和比较拆开，代码更安全，也更容易确认执行顺序。
 
 ## 4. 快速查询表
 
