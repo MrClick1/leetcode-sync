@@ -248,22 +248,47 @@ uset.clear();
 
 ### 1.5 `queue`：队列
 
-```cpp
-queue<int> que;
+`queue` 是先进先出（FIFO）的容器：最早进入队列的元素最先离开。使用时需要包含：
 
-que.push(10);             // 队尾加入元素
-int current = que.front();// 读取队首
-que.pop();                // 删除队首
+```cpp
+#include <queue>
+
+queue<int> que;
+queue<TreeNode*> nodes;
+queue<pair<int, int>> positions;
 ```
 
-注意：
+#### 常用操作
 
-- `front()` 读取队首元素，但不删除
-- `pop()` 删除队首元素，返回 `void`
-- 不能写 `int x = que.pop()`
-- BFS 中忘记 `pop()` 会反复处理同一个元素，造成死循环或 TLE
+```cpp
+que.push(10);       // 在队尾加入 10，返回 void
+que.emplace(20);    // 在队尾直接构造元素
 
-典型 BFS 取队首写法：
+int first = que.front(); // 读取队首，不删除
+int last = que.back();   // 读取队尾，不删除
+
+que.pop();           // 删除队首，返回 void
+que.empty();         // 是否为空
+que.size();          // 元素数量，返回 size_t
+```
+
+操作顺序可以记成：
+
+```text
+push / emplace → 从 back 进入
+front          → 查看最早进入的元素
+pop            → 删除最早进入的元素
+```
+
+#### 正确取出队首
+
+`pop()` 只删除元素，不返回元素，因此不能写：
+
+```cpp
+// int current = que.pop(); // 错误，pop() 返回 void
+```
+
+应该先读取，再删除：
 
 ```cpp
 while (!que.empty()) {
@@ -274,7 +299,219 @@ while (!que.empty()) {
 }
 ```
 
-### 1.6 `priority_queue`：优先队列 / 堆
+调用 `front()`、`back()` 或 `pop()` 前必须确认队列非空，否则属于未定义行为：
+
+```cpp
+if (!que.empty()) {
+    int current = que.front();
+    que.pop();
+}
+```
+
+如果需要在 `pop()` 后继续使用队首值，应先复制出来；对 `que.front()` 返回元素取得的引用会在该元素被删除后失效。若队列保存的是指针，复制出的指针值是否仍然有效，取决于它所指对象的生命周期。
+
+#### `pair` 入队与结构化绑定
+
+网格 BFS 经常把行列坐标放入队列：
+
+```cpp
+queue<pair<int, int>> que;
+
+que.push({row, col}); // 构造 pair 后入队
+que.emplace(row, col);// 直接在队尾构造 pair
+
+auto [r, c] = que.front();
+que.pop();
+```
+
+#### 普通 BFS 模板
+
+```cpp
+queue<int> que;
+que.push(start);
+
+while (!que.empty()) {
+    int current = que.front();
+    que.pop();
+
+    for (int next : graph[current]) {
+        if (visited[next]) continue;
+
+        visited[next] = true;
+        que.push(next);
+    }
+}
+```
+
+通常应在节点入队时立刻标记 `visited`，避免同一个节点被不同来源重复加入队列。
+
+#### 按层 BFS 模板
+
+每轮开始时保存当前层元素数量：
+
+```cpp
+int depth = 0;
+
+while (!que.empty()) {
+    int levelSize = static_cast<int>(que.size());
+
+    for (int i = 0; i < levelSize; ++i) {
+        int current = que.front();
+        que.pop();
+
+        // 将下一层节点加入 que
+    }
+
+    ++depth;
+}
+```
+
+必须先保存 `levelSize`。处理当前层时队列会不断加入下一层节点，如果循环条件直接使用不断变化的 `que.size()`，层级边界会混在一起。
+
+#### 遍历和清空限制
+
+`queue` 是容器适配器，不提供迭代器，也不能使用下标或范围 `for`：
+
+```cpp
+// que[0];                 // 不支持
+// for (int x : que) {}    // 不支持
+```
+
+如果只是依次处理并清空队列，可以不断读取队首并 `pop()`：
+
+```cpp
+while (!que.empty()) {
+    cout << que.front() << '\n';
+    que.pop();
+}
+```
+
+`queue` 没有 `clear()`。若只想清空，也可以交换一个同类型的空队列：
+
+```cpp
+queue<int> emptyQueue;
+que.swap(emptyQueue);
+```
+
+#### 常见错误
+
+- 忘记 `pop()`：反复处理同一个队首，可能造成死循环或 TLE。
+- 空队列调用 `front()`、`back()` 或 `pop()`：未定义行为。
+- 把 `front()` 当成删除操作：它只读取，不会改变队列。
+- 认为 `pop()` 会返回被删除值：它返回 `void`。
+- 在按层 BFS 中使用实时变化的 `que.size()` 作为当前层循环边界。
+- 节点出队时才标记访问，导致同一节点被重复入队；一般在入队时标记。
+
+### 1.6 `deque`：双端队列
+
+`deque` 是 double-ended queue（双端队列），可以在队首和队尾高效地插入、删除元素：
+
+```cpp
+#include <deque>
+
+deque<int> deq;
+deque<int> values = {1, 2, 3};
+```
+
+#### 两端操作
+
+```cpp
+deq.push_front(1);    // 队首加入元素
+deq.push_back(2);     // 队尾加入元素
+deq.emplace_front(0); // 在队首直接构造元素
+deq.emplace_back(3);  // 在队尾直接构造元素
+
+int first = deq.front(); // 读取队首，不删除
+int last = deq.back();   // 读取队尾，不删除
+
+deq.pop_front();      // 删除队首，返回 void
+deq.pop_back();       // 删除队尾，返回 void
+```
+
+和 `queue::pop()` 一样，`pop_front()`、`pop_back()` 都只删除、不返回元素。调用 `front()`、`back()`、`pop_front()` 或 `pop_back()` 前必须先确认容器非空。
+
+#### 容量、清空与随机访问
+
+```cpp
+deq.empty();     // 是否为空
+deq.size();      // 元素数量，返回 size_t
+deq.clear();     // 删除全部元素
+
+deq[i];          // 随机访问，不检查越界
+deq.at(i);       // 随机访问，越界时抛出异常
+```
+
+`deque` 支持像 `vector` 一样使用下标，但内部存储通常不是一整段连续内存，因此不能把它当作连续数组使用，也没有 `data()` 接口。
+
+#### 遍历
+
+`deque` 是完整容器，提供迭代器，可以使用范围 `for`：
+
+```cpp
+for (const int value : deq) {
+    cout << value << '\n';
+}
+```
+
+也可以使用迭代器：
+
+```cpp
+for (auto it = deq.begin(); it != deq.end(); ++it) {
+    cout << *it << '\n';
+}
+```
+
+#### `queue` 与 `deque` 的区别
+
+| 对比项 | `queue` | `deque` |
+|---|---|---|
+| 类型 | 容器适配器 | 完整容器 |
+| 加入元素 | 只开放队尾 `push` | `push_front`、`push_back` |
+| 删除元素 | 只开放队首 `pop` | `pop_front`、`pop_back` |
+| 下标访问 | 不支持 | 支持 |
+| 迭代器 / 范围 `for` | 不支持 | 支持 |
+| `clear()` | 不提供 | 提供 |
+
+`queue` 默认通常使用 `deque` 作为底层容器，但它故意只开放先进先出的操作。如果题目需要同时操作两端，应直接使用 `deque`。
+
+#### 单调队列模板
+
+滑动窗口最大值等问题常用 `deque` 保存数组下标，并让下标对应的值从队首到队尾单调递减：
+
+```cpp
+deque<int> deq;
+
+for (int i = 0; i < static_cast<int>(nums.size()); ++i) {
+    // 删除已经离开窗口的下标
+    while (!deq.empty() && deq.front() <= i - k) {
+        deq.pop_front();
+    }
+
+    // 删除队尾不可能再成为最大值的元素
+    while (!deq.empty() && nums[deq.back()] <= nums[i]) {
+        deq.pop_back();
+    }
+
+    deq.push_back(i);
+
+    if (i >= k - 1) {
+        result.push_back(nums[deq.front()]);
+    }
+}
+```
+
+这里保存下标而不是数值，是因为既要读取元素大小，也要判断元素是否已经离开窗口。队首始终是当前窗口最大值的下标。
+
+#### 复杂度与常见错误
+
+- 队首、队尾插入或删除：`O(1)`。
+- 随机下标访问：`O(1)`。
+- 中间位置插入或删除：通常为 `O(n)`。
+- 空 `deque` 调用 `front()`、`back()` 或删除操作：未定义行为。
+- `pop_front()` 和 `pop_back()` 返回 `void`，不能用它们接收被删除值。
+- `deque` 不保证连续存储，也不像 `vector` 那样提供 `reserve()`。
+
+### 1.7 `priority_queue`：优先队列 / 堆
 
 使用 `priority_queue` 需要包含：
 
@@ -387,7 +624,7 @@ for (ListNode* head : lists) {
 - `empty()` / `size()`：O(1)
 - 不支持像 `vector` 一样通过下标访问，也不提供直接遍历接口
 
-### 1.7 STL 容器的共同规则
+### 1.8 STL 容器的共同规则
 
 #### `size()` 通常返回 `size_t`
 
@@ -771,6 +1008,7 @@ using namespace std;
 
 ```cpp
 #include <algorithm>
+#include <deque>
 #include <iostream>
 #include <queue>
 #include <string>
@@ -827,8 +1065,16 @@ bool same = nums[oldLeft] == nums[left];
 | 判断哈希 key | `need.count(c) > 0` | 不会插入 key |
 | 查找哈希 key | `need.find(c) != need.end()` | 可通过迭代器读取 value |
 | 哈希计数 | `need[c]++` | 不存在时自动插入并初始化为 0 |
+| 队尾加入元素 | `que.push(value)` | 返回 `void` |
 | 队列读取队首 | `que.front()` | 不删除元素 |
+| 队列读取队尾 | `que.back()` | 不删除元素 |
 | 队列删除队首 | `que.pop()` | 返回 `void` |
+| 队列是否为空 | `que.empty()` | 调用 `front` / `back` / `pop` 前检查 |
+| 队列元素数量 | `que.size()` | 返回 `size_t` |
+| 双端队列队首加入 | `deq.push_front(value)` | 平均 `O(1)` |
+| 双端队列队尾加入 | `deq.push_back(value)` | 平均 `O(1)` |
+| 双端队列删除队首 | `deq.pop_front()` | 返回 `void` |
+| 双端队列删除队尾 | `deq.pop_back()` | 返回 `void` |
 | 大顶堆 | `priority_queue<int> heap` | 默认堆顶是最大值 |
 | 小顶堆 | `priority_queue<int, vector<int>, greater<int>> heap` | 堆顶是最小值 |
 | 读取堆顶 | `heap.top()` | 不删除元素，调用前检查非空 |
