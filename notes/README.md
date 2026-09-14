@@ -29,6 +29,7 @@
 
 | 题目 | 状态 | 笔记 |
 |---|---|---|
+| 438. 找到字符串中所有字母异位词 | ✅ 已解决 | [2026-09-14/0438-find-all-anagrams-in-a-string.md](2026-09-14/0438-find-all-anagrams-in-a-string.md) |
 | 3. 无重复字符的最长子串 | ✅ 已解决 | [2026-09-14/0003-longest-substring-without-repeating-characters.md](2026-09-14/0003-longest-substring-without-repeating-characters.md) |
 
 ## 2026-09-13
