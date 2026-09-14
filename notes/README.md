@@ -25,10 +25,17 @@
 | 堆与数据流 | [topics/10-堆与数据流.md](topics/10-堆与数据流.md) |
 | 前缀树 Trie | [topics/11-前缀树.md](topics/11-前缀树.md) |
 
+## 2026-09-14
+
+| 题目 | 状态 | 笔记 |
+|---|---|---|
+| 3. 无重复字符的最长子串 | ✅ 已解决 | [2026-09-14/0003-longest-substring-without-repeating-characters.md](2026-09-14/0003-longest-substring-without-repeating-characters.md) |
+
 ## 2026-09-13
 
 | 题目 | 状态 | 笔记 |
 |---|---|---|
+| 42. 接雨水 | ⚠️ 学习中（单调栈待巩固） | [2026-09-13/0042-trapping-rain-water.md](2026-09-13/0042-trapping-rain-water.md) |
 | 994. 腐烂的橘子（二刷） | ✅ 已解决 | [2026-09-13/0994-rotting-oranges.md](2026-09-13/0994-rotting-oranges.md) |
 | 200. 岛屿数量（二刷） | ✅ 已解决 | [2026-09-13/0200-number-of-islands.md](2026-09-13/0200-number-of-islands.md) |
 
