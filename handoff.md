@@ -30,6 +30,7 @@
 - 右指针逐个加入字符；若重复，左指针通过 `while` 不断删除，窗口恢复合法后更新最大长度。
 - 修复了混用 `right = 0` 与 `s[right + 1]` 导致的跳过首字符和越界，以及只在重复时更新答案的问题。
 - 复盘笔记已写入 `notes/2026-09-14/0003-longest-substring-without-repeating-characters.md`，滑动窗口专题和总索引已同步更新。
+- `notes/01-cpp语法知识文档.md` 已补充 `unordered_set` 的 `insert`、`erase`、`count`、`find`、遍历删除和滑动窗口用法。
 
 **Hot 100 题型复习索引（2026-09-13）✅**
 

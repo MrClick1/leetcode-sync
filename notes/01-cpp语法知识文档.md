@@ -205,13 +205,178 @@ need.clear();      // 清空
 
 ### 1.4 `unordered_set`：无序集合
 
-`unordered_set` 只保存 key，不保存 value，插入重复元素时会自动去重：
+使用时包含头文件：
+
+```cpp
+#include <unordered_set>
+```
+
+`unordered_set<T>` 只保存类型为 `T` 的 key，不保存额外的 value。集合中的元素不会重复，并且不保证遍历顺序。
+
+```cpp
+unordered_set<int> numbers;
+unordered_set<char> window;
+unordered_set<string> words;
+```
+
+#### `insert`：插入元素
+
+最常见的写法：
 
 ```cpp
 unordered_set<int> uset;
 uset.insert(3);
 uset.insert(3); // 不会产生第二个 3
 ```
+
+`insert` 的返回值是：
+
+```cpp
+pair<iterator, bool>
+```
+
+- `first`：指向集合中该元素的迭代器。
+- `second`：本次是否真的插入了新元素。
+
+```cpp
+auto result = uset.insert(3);
+
+if (result.second) {
+    // 原来不存在 3，本次插入成功
+} else {
+    // 原来已经存在 3，没有重复插入
+}
+```
+
+C++17 可以使用结构化绑定：
+
+```cpp
+auto [it, inserted] = uset.insert(3);
+if (inserted) {
+    cout << "插入成功";
+}
+```
+
+如果不关心是否插入成功，可以直接写：
+
+```cpp
+uset.insert(3);
+```
+
+还可以使用 `emplace`，根据参数直接构造元素：
+
+```cpp
+unordered_set<string> words;
+words.emplace("hello");
+```
+
+对于 `int`、`char` 这类简单类型，`insert` 已经足够直观。
+
+#### `erase`：删除元素
+
+按照值删除：
+
+```cpp
+uset.erase(3);
+```
+
+如果元素不存在，`erase` 不会报错。按照值删除时，返回实际删除的元素数量；对 `unordered_set` 来说只能是 `0` 或 `1`：
+
+```cpp
+size_t removed = uset.erase(3);
+
+if (removed == 1) {
+    // 删除成功
+} else {
+    // 集合中原本没有 3
+}
+```
+
+也可以按照迭代器删除：
+
+```cpp
+auto it = uset.find(3);
+if (it != uset.end()) {
+    uset.erase(it);
+}
+```
+
+遍历时删除元素，不能在删除后继续使用已经失效的旧迭代器。可以接收 `erase` 返回的下一个迭代器：
+
+```cpp
+for (auto it = uset.begin(); it != uset.end();) {
+    if (*it < 0) {
+        it = uset.erase(it);
+    } else {
+        ++it;
+    }
+}
+```
+
+#### `count` 与 `find`：判断元素是否存在
+
+`count` 返回集合中指定元素的数量。因为 `unordered_set` 不允许重复，所以结果只有 `0` 或 `1`：
+
+```cpp
+if (uset.count(3)) {
+    // 存在 3
+}
+
+if (!uset.count(3)) {
+    // 不存在 3
+}
+```
+
+`find` 返回迭代器：
+
+```cpp
+auto it = uset.find(3);
+
+if (it != uset.end()) {
+    // 找到了，*it 就是 3
+} else {
+    // 没找到
+}
+```
+
+只需要判断“是否存在”时，`count` 更简洁；找到后还要使用或删除对应迭代器时，使用 `find`。
+
+C++20 还提供：
+
+```cpp
+uset.contains(3);
+```
+
+但使用 C++17 时应继续使用 `count` 或 `find`。
+
+#### 在滑动窗口中的用法
+
+第 3 题“无重复字符的最长子串”中：
+
+```cpp
+unordered_set<char> window;
+```
+
+集合表示当前窗口中已经出现的字符。
+
+```cpp
+while (window.count(s[right])) {
+    window.erase(s[left]);
+    ++left;
+}
+
+window.insert(s[right]);
+```
+
+对应关系是：
+
+```text
+count  -> 检查字符是否已经在窗口中
+erase  -> 左边界移动时，删除离开窗口的字符
+insert -> 将右边界的新字符加入窗口
+```
+
+窗口始终无重复，所以这里只需要集合，不需要使用 `unordered_map<char, int>` 记录频次。
 
 #### 遍历 `unordered_set`
 
@@ -236,15 +401,18 @@ for (auto it = uset.begin(); it != uset.end(); ++it) {
 #### 常用操作
 
 ```cpp
+uset.insert(value); // 插入；已经存在时不会重复插入
 uset.count(value); // 存在返回 1，不存在返回 0
 uset.find(value);  // 返回迭代器，找不到时返回 end()
-uset.erase(value);
-uset.size();
-uset.empty();
-uset.clear();
+uset.erase(value); // 删除；不存在时不会报错
+uset.size();        // 元素数量
+uset.empty();       // 是否为空
+uset.clear();       // 删除全部元素
 ```
 
-集合元素不能通过迭代器直接修改，因为修改后可能破坏哈希结构；需要删除旧值再插入新值。
+`unordered_set` 没有 `operator[]`，不能写 `uset[key]`。集合元素也不能通过迭代器直接修改，因为修改 key 后可能破坏哈希结构；需要删除旧值再插入新值。
+
+插入、查找和删除的平均时间复杂度为 `O(1)`，极端哈希冲突时最坏可能退化为 `O(n)`。
 
 ### 1.5 `queue`：队列
 
