@@ -92,12 +92,177 @@ s.pop_back();      // 删除末尾字符
 
 #### 截取子串
 
+函数形式：
+
 ```cpp
-string part = s.substr(start, length);
-string suffix = s.substr(start); // 从 start 一直到末尾
+string substr(size_t start = 0, size_t length = string::npos) const;
+```
+
+最重要的含义：
+
+```text
+start  = 从哪个下标开始截取
+length = 最多截取多少个字符
 ```
 
 `substr` 的第二个参数是长度，不是结束下标。
+
+```cpp
+string s = "hello";
+
+string a = s.substr(1, 3); // "ell"：从下标 1 开始，取 3 个字符
+string b = s.substr(2);    // "llo"：从下标 2 一直取到末尾
+string c = s.substr();     // "hello"：默认从 0 开始取到末尾
+```
+
+下标示意：
+
+```text
+字符： h e l l o
+下标： 0 1 2 3 4
+
+s.substr(1, 3)
+             └─ 从下标 1 开始取 3 个字符：e、l、l
+```
+
+##### 根据左右边界计算 `length`
+
+如果窗口使用闭区间 `[left, right]`，包含左右两个端点：
+
+```cpp
+string part = s.substr(left, right - left + 1);
+```
+
+例如：
+
+```cpp
+string s = "abcdef";
+int left = 1;
+int right = 3;
+
+string part = s.substr(left, right - left + 1); // "bcd"
+```
+
+如果窗口使用半开区间 `[left, right)`，不包含 `right`：
+
+```cpp
+string part = s.substr(left, right - left);
+```
+
+记忆：
+
+```text
+闭区间长度   = right - left + 1
+半开区间长度 = right - left
+```
+
+##### `substr` 返回新字符串
+
+`substr` 不会修改原字符串，而是返回截取出来的新字符串：
+
+```cpp
+string s = "hello";
+string part = s.substr(1, 3);
+
+// s 仍然是 "hello"
+// part 是 "ell"
+```
+
+如果希望保存结果，必须接收返回值：
+
+```cpp
+string answer = s.substr(start, length);
+```
+
+##### 长度超过末尾不会报错
+
+如果 `start` 合法，但 `length` 超过剩余字符数量，`substr` 会自动截取到字符串末尾：
+
+```cpp
+string s = "hello";
+string part = s.substr(3, 100); // "lo"
+```
+
+因此下面两种写法效果相同：
+
+```cpp
+s.substr(2);
+s.substr(2, string::npos);
+```
+
+`string::npos` 是一个特殊值，在这里表示“一直到末尾”。
+
+##### `start` 越界会抛出异常
+
+合法起点范围是：
+
+```text
+0 <= start <= s.size()
+```
+
+- `start < s.size()`：从对应字符开始截取。
+- `start == s.size()`：返回空字符串。
+- `start > s.size()`：抛出 `std::out_of_range`。
+
+```cpp
+string s = "hello";
+
+s.substr(5); // ""
+s.substr(6); // 抛出 std::out_of_range
+```
+
+尤其要注意，`substr` 的参数类型是无符号的 `size_t`。如果把 `-1` 作为起点：
+
+```cpp
+int bestStart = -1;
+string answer = s.substr(bestStart, bestLength);
+```
+
+`-1` 会转换成一个非常大的无符号整数，因此可能看到类似错误：
+
+```text
+basic_string::substr: __pos (which is 18446744073709551615)
+> this->size()
+```
+
+在“最小覆盖子串”一类题中，无解时应先判断哨兵值：
+
+```cpp
+return bestStart == -1
+    ? ""
+    : s.substr(bestStart, bestLength);
+```
+
+##### 常见错误
+
+错误一：把第二个参数当成结束下标。
+
+```cpp
+// 想截取闭区间 [left, right]
+s.substr(left, right);              // 错误理解
+s.substr(left, right - left + 1);   // 正确
+```
+
+错误二：无解时直接使用 `-1` 作为起点。
+
+```cpp
+int start = -1;
+// s.substr(start, length); // 可能抛出 out_of_range
+```
+
+错误三：以为 `substr` 会修改原字符串。
+
+```cpp
+s.substr(1, 3); // 返回值没有接收，s 不会发生变化
+```
+
+##### 复杂度
+
+构造结果字符串需要复制截取到的字符，因此时间和额外空间通常都是：
+
+```text
+O(截取结果的长度)
+```
 
 ### 1.3 `unordered_map`：哈希表
 
@@ -1353,6 +1518,9 @@ bool same = nums[oldLeft] == nums[left];
 |---|---|---|
 | `vector` 元素数量 | `nums.size()` | 返回 `size_t` |
 | `string` 截取子串 | `s.substr(start, length)` | 第二个参数是长度 |
+| 截取闭区间 `[left,right]` | `s.substr(left, right-left+1)` | 包含 `right`，所以长度加一 |
+| 截取半开区间 `[left,right)` | `s.substr(left, right-left)` | 不包含 `right` |
+| 截取到字符串末尾 | `s.substr(start)` | `start == s.size()` 时返回空串 |
 | 哈希表 key 数量 | `need.size()` | 不是所有 value 的总和 |
 | 判断哈希 key | `need.count(c) > 0` | 不会插入 key |
 | 查找哈希 key | `need.find(c) != need.end()` | 可通过迭代器读取 value |
