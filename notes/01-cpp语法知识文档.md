@@ -811,6 +811,130 @@ nums.end();   // 指向最后一个元素之后的位置
 
 `end()` 不指向有效元素，不能直接解引用。
 
+### 1.9 `push`、`push_back` 与 `insert` 怎么选择
+
+这些名字都表示“加入元素”，但它们属于不同类型的容器接口，并不是任意容器都能使用。
+
+#### 最重要的判断规则
+
+```text
+顺序容器，明确从哪一端加入：push_back / push_front
+栈、队列、堆，只暴露一个加入入口：push
+集合、映射，按照 key 组织元素：insert
+```
+
+#### 容器速查
+
+| 容器 | 常用加入操作 | 含义 |
+|---|---|---|
+| `vector<T>` | `push_back(value)` | 在动态数组末尾加入一个 `T` |
+| `string` | `push_back(ch)` | 在字符串末尾加入一个字符 |
+| `deque<T>` | `push_front(value)` / `push_back(value)` | 从队首或队尾加入 |
+| `list<T>` | `push_front(value)` / `push_back(value)` | 从链表头部或尾部加入 |
+| `stack<T>` | `push(value)` | 压入栈顶 |
+| `queue<T>` | `push(value)` | 加入队尾 |
+| `priority_queue<T>` | `push(value)` | 加入堆中并维持堆序 |
+| `set<T>` / `unordered_set<T>` | `insert(value)` | 按 key 插入，重复元素不会再次加入 |
+| `map<K,V>` / `unordered_map<K,V>` | `insert({key, value})` | 插入一组 key-value，key 不重复 |
+
+#### 为什么 `vector` 使用 `push_back`
+
+`vector` 是有顺序的动态数组，必须明确元素加入的位置。最常见的是追加到末尾：
+
+```cpp
+vector<int> nums;
+nums.push_back(10);
+nums.push_back(20);
+```
+
+`push_back` 一次加入一个“元素类型”的对象：
+
+```cpp
+vector<int> nums;
+nums.push_back(1);               // 元素类型是 int
+
+vector<vector<int>> answers;
+answers.push_back({-1, 0, 1});   // 元素类型是 vector<int>
+```
+
+`vector` 也有 `insert`，但它主要用于在指定迭代器位置插入：
+
+```cpp
+nums.insert(nums.begin(), 5);          // 在开头插入一个 5
+nums.insert(nums.end(), {1, 2, 3});    // 在末尾插入多个元素
+```
+
+只是在末尾追加一个元素时，优先使用语义更直接的 `push_back`。
+
+#### 为什么 `stack`、`queue` 使用 `push`
+
+这些是容器适配器，加入位置由数据结构本身决定，不需要调用者选择方向：
+
+```cpp
+stack<int> stk;
+stk.push(10);       // 只能压入栈顶
+
+queue<int> que;
+que.push(10);       // 只能加入队尾
+
+priority_queue<int> heap;
+heap.push(10);      // 加入堆，内部自动调整位置
+```
+
+虽然 `queue` 实际从队尾加入，但它的接口仍然叫 `push`，因为使用者只关心“入队”，不需要直接操作底层容器的尾部。
+
+#### 为什么集合与映射使用 `insert`
+
+集合与映射不是按照“头部、尾部”组织元素，而是按照 key 组织元素，所以使用 `insert`：
+
+```cpp
+unordered_set<char> window;
+window.insert('a');
+
+unordered_map<string, int> score;
+score.insert({"Alice", 100});
+```
+
+它们没有 `push`、`push_back`，也不能由调用者指定元素最终位于哪个位置。
+
+#### `emplace` 系列
+
+许多容器还有对应的 `emplace` 操作，作用与加入元素相近，但会直接使用参数构造元素：
+
+```cpp
+vector<int> nums;
+queue<pair<int, int>> positions;
+unordered_set<char> window;
+
+nums.emplace_back(10);       // vector：末尾构造
+positions.emplace(1, 2);     // queue：直接构造 pair<int, int>
+window.emplace('a');         // unordered_set：直接构造并插入
+```
+
+刷题初期可以先记住 `push` / `push_back` / `insert`；需要构造 `pair` 或复杂对象时，再考虑 `emplace`。
+
+#### 常见错误
+
+```cpp
+unordered_set<int> uset;
+// uset.push(1);             // 错误：集合使用 insert
+
+vector<int> nums;
+// nums.push(1);             // 错误：vector 末尾加入使用 push_back
+
+queue<int> que;
+// que.push_back(1);         // 错误：queue 使用 push
+```
+
+记忆口诀：
+
+```text
+数组末尾 push_back；
+双端容器带方向；
+栈队堆只说 push；
+哈希红黑树用 insert。
+```
+
 ## 2. `<algorithm>` 常用算法
 
 使用这些算法时应包含：
@@ -1233,6 +1357,10 @@ bool same = nums[oldLeft] == nums[left];
 | 判断哈希 key | `need.count(c) > 0` | 不会插入 key |
 | 查找哈希 key | `need.find(c) != need.end()` | 可通过迭代器读取 value |
 | 哈希计数 | `need[c]++` | 不存在时自动插入并初始化为 0 |
+| `vector` 末尾加入 | `nums.push_back(value)` | 一次加入一个 `value_type` |
+| `deque` 两端加入 | `deq.push_front(value)` / `deq.push_back(value)` | 必须明确方向 |
+| 集合插入 | `uset.insert(value)` | 自动去重，不使用 `push` |
+| 映射插入 | `umap.insert({key, value})` | key 已存在时不会覆盖原 value |
 | 队尾加入元素 | `que.push(value)` | 返回 `void` |
 | 队列读取队首 | `que.front()` | 不删除元素 |
 | 队列读取队尾 | `que.back()` | 不删除元素 |

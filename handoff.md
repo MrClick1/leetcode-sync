@@ -31,6 +31,7 @@
 - 修复了混用 `right = 0` 与 `s[right + 1]` 导致的跳过首字符和越界，以及只在重复时更新答案的问题。
 - 复盘笔记已写入 `notes/2026-09-14/0003-longest-substring-without-repeating-characters.md`，滑动窗口专题和总索引已同步更新。
 - `notes/01-cpp语法知识文档.md` 已补充 `unordered_set` 的 `insert`、`erase`、`count`、`find`、遍历删除和滑动窗口用法。
+- C++ 语法笔记进一步补充了 `push`、`push_back`、`push_front`、`insert` 与 `emplace` 的容器分类、速查表和记忆口诀。
 
 **Hot 100 题型复习索引（2026-09-13）✅**
 
