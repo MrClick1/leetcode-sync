@@ -581,6 +581,32 @@ uset.clear();       // 删除全部元素
 
 ### 1.5 `queue`：队列
 
+#### 队列、双端队列与栈：操作速查（2026-09-18 复习）
+
+把队首放在左边、队尾放在右边：普通队列从右边加入、左边取出；双端队列两边都可以操作。
+
+| 操作 | `queue<int> q` | `deque<int> dq` | `stack<int> st`（对照） |
+|---|---|---|---|
+| 加入 | `q.push(x)`：队尾 | `dq.push_front(x)` / `dq.push_back(x)` | `st.push(x)`：栈顶 |
+| 查看 | `q.front()` / `q.back()` | `dq.front()` / `dq.back()` | `st.top()` |
+| 删除 | `q.pop()`：队首 | `dq.pop_front()` / `dq.pop_back()` | `st.pop()`：栈顶 |
+| 判空 | `q.empty()` | `dq.empty()` | `st.empty()` |
+| 数量 | `q.size()` | `dq.size()` | `st.size()` |
+| 下标访问 | 不支持 | `dq[i]` / `dq.at(i)` | 不支持 |
+
+记忆：`front/back/top` 负责读取；`pop` 系列负责删除，返回 `void`。读取和删除都应保证容器非空。`queue` 没有 `top()`，`deque` 没有不带方向的 `push()` 或 `pop()`。
+
+```cpp
+queue<int> q;
+q.push(10);             // [10]
+q.push(20);             // [10, 20]
+q.push(30);             // [10, 20, 30]
+int current = q.front(); // current = 10，队列不变
+q.pop();                // [20, 30]
+```
+
+先读取再删除，和前序遍历中先 `st.top()` 再 `st.pop()` 的结构一致。但栈后进先出，队列先进先出：树的这份前序迭代代码用栈，按层遍历通常用队列，不能直接替换而期待相同顺序。
+
 `queue` 是先进先出（FIFO）的容器：最早进入队列的元素最先离开。使用时需要包含：
 
 ```cpp
@@ -747,6 +773,23 @@ deque<int> values = {1, 2, 3};
 ```
 
 #### 两端操作
+
+先用一个完整例子记住方向。以下方括号左侧表示队首，右侧表示队尾：
+
+```cpp
+deque<int> dq;
+dq.push_back(20);   // [20]
+dq.push_front(10);  // [10, 20]
+dq.push_back(30);   // [10, 20, 30]
+
+int first = dq.front(); // 10，只读取
+int last = dq.back();   // 30，只读取
+
+dq.pop_front();     // [20, 30]
+dq.pop_back();      // [20]
+```
+
+`push/pop` 表示加入/删除，`front/back` 表示队首/队尾。双端队列的修改操作把这两部分组合起来记忆即可。
 
 ```cpp
 deq.push_front(1);    // 队首加入元素
