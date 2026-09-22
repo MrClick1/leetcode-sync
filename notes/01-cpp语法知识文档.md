@@ -1255,6 +1255,74 @@ sort(first, last, comp);
 
 > 如果 `a` 应当排在 `b` 前面，就返回 `true`。
 
+lambda 是一种没有函数名、可以直接写在使用位置的函数。它的完整语法是：
+
+```cpp
+[捕获列表](参数列表) -> 返回类型 {
+    函数体
+}
+```
+
+其中 `-> 返回类型` 通常可以省略，由编译器根据 `return` 自动推导：
+
+```cpp
+[](const vector<int>& a, const vector<int>& b) {
+    return a[0] < b[0];
+}
+```
+
+逐部分理解：
+
+```cpp
+[]                         // 捕获列表：不使用外部局部变量
+(const vector<int>& a,     // 第一个待比较的元素
+ const vector<int>& b)     // 第二个待比较的元素
+{
+    return a[0] < b[0];    // 返回 bool：a 是否应该排在 b 前面
+}
+```
+
+- `[]`：捕获列表。空的 `[]` 表示函数体不使用所在函数中的局部变量；
+- `(const vector<int>& a, const vector<int>& b)`：参数列表。`sort` 每次取两个元素交给它比较；
+- `const`：承诺不修改正在比较的元素；
+- `&`：使用引用，避免复制整个 `vector<int>`；
+- `{ ... }`：函数体；
+- 两个分支都返回 `bool`，因此可以省略显式的 `-> bool`。
+
+把返回类型写全也可以：
+
+```cpp
+[](const vector<int>& a, const vector<int>& b) -> bool {
+    return a[0] < b[0];
+}
+```
+
+它和下面这个普通函数表达的是相同的比较规则：
+
+```cpp
+bool compare(const vector<int>& a, const vector<int>& b) {
+    return a[0] < b[0];
+}
+```
+
+区别只是 lambda 不需要单独起名字，可以直接作为 `sort` 的第三个参数传入。`sort` 会在排序过程中多次调用它，例如比较 `intervals[0]` 与 `intervals[1]`。
+
+捕获列表中也可以使用外部变量。例如，根据 `ascending` 决定升序还是降序：
+
+```cpp
+bool ascending = true;
+
+sort(nums.begin(), nums.end(),
+     [ascending](int a, int b) {
+         if (ascending) {
+             return a < b;
+         }
+         return a > b;
+     });
+```
+
+这里 `[ascending]` 表示把外部变量 `ascending` 按值复制进 lambda。初学 `sort` 时，先熟悉空捕获 `[]` 即可。
+
 例如，区间按起点升序，起点相同时按终点降序：
 
 ```cpp
