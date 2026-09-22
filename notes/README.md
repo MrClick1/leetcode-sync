@@ -35,6 +35,7 @@
 | 189. 轮转数组 | ✅ 已解决（三次反转） | [2026-09-22/0189-rotate-array.md](2026-09-22/0189-rotate-array.md) |
 | 41. 缺失的第一个正数（二刷） | ✅ 已解决 | [2026-09-22/0041-first-missing-positive.md](2026-09-22/0041-first-missing-positive.md) |
 | 35. 搜索插入位置 | ✅ 已解决 | [2026-09-22/0035-search-insert-position.md](2026-09-22/0035-search-insert-position.md) |
+| 34. 在排序数组中查找元素的第一个和最后一个位置 | ✅ 已解决 | [2026-09-22/0034-find-first-and-last-position.md](2026-09-22/0034-find-first-and-last-position.md) |
 
 ## 2026-09-14
 
