@@ -24,6 +24,7 @@
 | 栈与单调栈 | [topics/09-栈与单调栈.md](topics/09-栈与单调栈.md) |
 | 堆与数据流 | [topics/10-堆与数据流.md](topics/10-堆与数据流.md) |
 | 前缀树 Trie | [topics/11-前缀树.md](topics/11-前缀树.md) |
+| 二分查找 | [topics/12-二分查找.md](topics/12-二分查找.md) |
 
 ## 2026-09-22
 
@@ -33,6 +34,7 @@
 | 56. 合并区间 | ✅ 已解决 | [2026-09-22/0056-merge-intervals.md](2026-09-22/0056-merge-intervals.md) |
 | 189. 轮转数组 | ✅ 已解决（三次反转） | [2026-09-22/0189-rotate-array.md](2026-09-22/0189-rotate-array.md) |
 | 41. 缺失的第一个正数（二刷） | ✅ 已解决 | [2026-09-22/0041-first-missing-positive.md](2026-09-22/0041-first-missing-positive.md) |
+| 35. 搜索插入位置 | ✅ 已解决 | [2026-09-22/0035-search-insert-position.md](2026-09-22/0035-search-insert-position.md) |
 
 ## 2026-09-14
 
