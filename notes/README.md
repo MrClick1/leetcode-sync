@@ -32,6 +32,7 @@
 | 53. 最大子数组和 | 已修正并复核 | [2026-09-22/0053-maximum-subarray.md](2026-09-22/0053-maximum-subarray.md) |
 | 56. 合并区间 | ✅ 已解决 | [2026-09-22/0056-merge-intervals.md](2026-09-22/0056-merge-intervals.md) |
 | 189. 轮转数组 | ✅ 已解决（三次反转） | [2026-09-22/0189-rotate-array.md](2026-09-22/0189-rotate-array.md) |
+| 41. 缺失的第一个正数（二刷） | ✅ 已解决 | [2026-09-22/0041-first-missing-positive.md](2026-09-22/0041-first-missing-positive.md) |
 
 ## 2026-09-14
 
