@@ -1776,6 +1776,80 @@ bool same = nums[oldLeft] == nums[left];
 
 原则：同一条表达式中不要同时读取某个变量并修改它；把递增、下标访问和比较拆开，代码更安全，也更容易确认执行顺序。
 
+### 3.11 `<numeric>` 中的 `std::gcd`：最大公约数
+
+`gcd` 是 Greatest Common Divisor 的缩写，返回两个整数的最大公约数。例如 6 的正约数为 1、2、3、6，4 的正约数为 1、2、4，最大的共同正约数为 2。
+
+标准库函数从 C++17 开始提供，头文件为 `<numeric>`，不是 `<algorithm>`：
+
+```cpp
+#include <numeric>
+
+int g = std::gcd(6, 4); // 2
+// 使用 using namespace std; 后可以写 gcd(6, 4)
+```
+
+```cpp
+std::gcd(6, 2); // 2
+std::gcd(9, 3); // 3
+std::gcd(7, 3); // 1，两个数互质
+std::gcd(6, 0); // 6
+std::gcd(0, 0); // 0，标准库对此有明确约定
+```
+
+在轮转数组中，`std::gcd(n, k)` 恰好等于独立环的数量，这是题目的数学性质；gcd 函数本身只负责计算最大公约数。
+
+| n | k | 下标环 | 环数 |
+|---|---|---|---|
+| 6 | 2 | 0→2→4→0；1→3→5→1 | 2 |
+| 6 | 3 | 0→3→0；1→4→1；2→5→2 | 3 |
+| 7 | 2 | 0→2→4→6→1→3→5→0 | 1 |
+
+#### 辗转相除法
+
+对非负整数，当 b != 0 时，有 `gcd(a, b) = gcd(b, a % b)`。因为 a = q*b + r，同时整除 a 和 b 的数也整除余数 r；反过来同时整除 b 和 r 的数也整除 a，因此两组数的公约数相同。
+
+```text
+gcd(18, 12)
+→ gcd(12, 6)  因为 18 % 12 = 6
+→ gcd(6, 0)   因为 12 % 6 = 0
+→ 6
+```
+
+下面是学习用实现，参数限定为非负整数；做题时可以直接调用标准库：
+
+```cpp
+int myGcd(int a, int b) {
+    while (b != 0) {
+        int remainder = a % b;
+        a = b;
+        b = remainder;
+    }
+    return a;
+}
+```
+
+### 3.12 复制、引用与 `swap`：轮转数组中的误区
+
+```cpp
+int prev = nums[0];  // 复制值，prev 是独立变量
+int& ref = nums[0];  // 引用，ref 是 nums[0] 的别名
+```
+
+修改 prev 不会自动修改 nums[0]；修改 ref 会修改 nums[0]。赋值表达式右边来自数组元素，并不意味着左边自动成为引用。
+
+独立变量也能参与 swap。`swap(nums[next], prev)` 通过引用参数修改 nums[next] 和 prev，相当于：
+
+```cpp
+int temp = nums[next];
+nums[next] = prev;
+prev = temp;
+```
+
+例如 nums = [1,2,3]、prev = 1、next = 2，交换后 nums = [1,2,1]，prev = 3，而 nums[0] 仍为 1。prev 保存了被覆盖的数字，下一轮可以继续把它送到正确位置。
+
+轮转数组中不要将 `int prev` 改为 `int& prev`，否则每次交换都在修改起点元素，破坏临时保存数字的逻辑。与之相对，合并区间中的 `vector<int>& endRes = result.back()` 正是为了直接修改结果中的最后一段。
+
 ## 4. 快速查询表
 
 ### STL
