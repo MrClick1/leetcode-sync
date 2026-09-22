@@ -1185,17 +1185,172 @@ reverse(nums.begin() + start, nums.end());
 
 ### 2.4 `sort`：排序
 
+#### 基本写法
+
 ```cpp
 sort(nums.begin(), nums.end());
 ```
 
-默认升序。题目明确禁止 `sort` 时不能使用。
+`sort(first, last)` 会原地排序半开区间 `[first, last)`，平均时间复杂度为 `O(n log n)`。
+不传第三个参数时，默认使用元素类型的 `<` 运算符，因此通常表现为升序。
 
 自定义降序：
 
 ```cpp
 sort(nums.begin(), nums.end(), greater<int>());
 ```
+
+也可以写成：
+
+```cpp
+sort(nums.rbegin(), nums.rend());
+```
+
+题目明确禁止 `sort` 时不能使用。
+
+#### `vector<vector<int>>` 默认怎样排序
+
+`vector` 之间默认采用**字典序**比较，规则类似单词在字典中的排列：
+
+1. 先比较下标 `0` 的元素；
+2. 如果相等，继续比较下标 `1`；
+3. 依次向后，直到找到不同元素；
+4. 如果公共部分全部相同，较短的 `vector` 排在前面。
+
+例如：
+
+```cpp
+vector<vector<int>> values = {
+    {4, 7}, {1, 4}, {1, 3, 5}, {1, 3}
+};
+
+sort(values.begin(), values.end());
+
+// 排序结果：
+// {1, 3}, {1, 3, 5}, {1, 4}, {4, 7}
+```
+
+在合并区间题中，每个元素都是 `{start, end}`，长度固定为 `2`：
+
+```cpp
+sort(intervals.begin(), intervals.end());
+```
+
+它等价于：
+
+- 先按照 `start` 升序；
+- `start` 相同时，再按照 `end` 升序。
+
+所以第 56 题可以直接使用默认排序。
+
+#### 使用 lambda 自定义排序规则
+
+`sort` 的第三个参数可以传入比较器：
+
+```cpp
+sort(first, last, comp);
+```
+
+比较器 `comp(a, b)` 的含义是：
+
+> 如果 `a` 应当排在 `b` 前面，就返回 `true`。
+
+例如，区间按起点升序，起点相同时按终点降序：
+
+```cpp
+sort(intervals.begin(), intervals.end(),
+     [](const vector<int>& a, const vector<int>& b) {
+         if (a[0] != b[0]) {
+             return a[0] < b[0];   // 起点小的在前
+         }
+         return a[1] > b[1];       // 起点相同，终点大的在前
+     });
+```
+
+记忆方法：不要死记“升序写 `<`、降序写 `>`”，而是把代码读成：
+
+```cpp
+return a.xxx < b.xxx;
+// a.xxx 更小时，a 排在 b 前面
+```
+
+#### 自定义对象按成员变量排序
+
+```cpp
+struct Student {
+    string name;
+    int score;
+    int age;
+};
+
+vector<Student> students;
+```
+
+按成绩降序；成绩相同时，按年龄升序：
+
+```cpp
+sort(students.begin(), students.end(),
+     [](const Student& a, const Student& b) {
+         if (a.score != b.score) {
+             return a.score > b.score;  // 成绩高的在前
+         }
+         return a.age < b.age;          // 年龄小的在前
+     });
+```
+
+参数写成 `const Student&`，可以避免复制对象，同时保证比较函数不修改对象。
+
+#### 使用普通比较函数
+
+除了 lambda，也可以单独定义函数：
+
+```cpp
+bool compareStudent(const Student& a, const Student& b) {
+    if (a.score != b.score) {
+        return a.score > b.score;
+    }
+    return a.age < b.age;
+}
+
+sort(students.begin(), students.end(), compareStudent);
+```
+
+如果比较函数写在 `Solution` 类中，可以把它声明为 `static`：
+
+```cpp
+class Solution {
+public:
+    static bool compareInterval(const vector<int>& a,
+                                const vector<int>& b) {
+        return a[0] < b[0];
+    }
+
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        sort(intervals.begin(), intervals.end(), compareInterval);
+        // ...
+    }
+};
+```
+
+LeetCode 中临时使用的排序规则，通常用 lambda 最直观。
+
+#### 比较器最重要的限制
+
+相等时必须返回 `false`，因此通常使用 `<` 或 `>`，不要使用 `<=` 或 `>=`：
+
+```cpp
+// 正确
+return a.score < b.score;
+
+// 错误：a 和 b 相等时，compare(a, b) 与 compare(b, a) 都会返回 true
+return a.score <= b.score;
+```
+
+`sort` 要求比较器满足严格弱序。初学时可以记成：
+
+> 相等的两个对象，谁也不能被判定为“必须排在另一个前面”。
+
+另外，`sort` 需要随机访问迭代器，可用于 `vector`、`array`、`deque`，不能直接用于 `list`；链表容器应使用 `list.sort()`。
 
 ### 2.5 `min` 与 `max`
 
@@ -1594,6 +1749,9 @@ bool same = nums[oldLeft] == nums[left];
 | 原地交换 | `swap(a, b)` | 两个对象类型需兼容 |
 | 反转区间 | `reverse(first, last)` | 操作 `[first, last)` |
 | 升序排序 | `sort(first, last)` | 操作 `[first, last)` |
+| 降序排序 | `sort(first, last, greater<T>())` | `T` 是元素类型 |
+| 嵌套 `vector` 默认排序 | `sort(values.begin(), values.end())` | 按元素逐项进行字典序比较 |
+| 自定义排序 | `sort(first, last, comp)` | `comp(a, b)` 为真表示 `a` 在 `b` 前；相等时必须为假 |
 | 取较小值 | `min(a, b)` | 参数类型应兼容 |
 | 取较大值 | `max(a, b)` | 参数类型应兼容 |
 
