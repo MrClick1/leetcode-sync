@@ -31,6 +31,7 @@
 | 题目 | 状态 | 笔记 |
 |---|---|---|
 | 3. 无重复字符的最长子串（二刷） | 代码已复核 | [2026-09-23/0003-longest-substring-without-repeating-characters.md](2026-09-23/0003-longest-substring-without-repeating-characters.md) |
+| 146. LRU 缓存（三刷） | ✅ 已解决，待巩固流畅度 | [2026-09-23/0146-lru-cache.md](2026-09-23/0146-lru-cache.md) |
 
 ## 2026-09-22
 
