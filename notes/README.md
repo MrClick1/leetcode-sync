@@ -26,6 +26,12 @@
 | 前缀树 Trie | [topics/11-前缀树.md](topics/11-前缀树.md) |
 | 二分查找 | [topics/12-二分查找.md](topics/12-二分查找.md) |
 
+## 2026-09-23
+
+| 题目 | 状态 | 笔记 |
+|---|---|---|
+| 3. 无重复字符的最长子串（二刷） | 代码已复核 | [2026-09-23/0003-longest-substring-without-repeating-characters.md](2026-09-23/0003-longest-substring-without-repeating-characters.md) |
+
 ## 2026-09-22
 
 | 题目 | 状态 | 笔记 |
