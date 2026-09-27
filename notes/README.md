@@ -31,6 +31,7 @@
 | 题目 | 状态 | 笔记 |
 |---|---|---|
 | 739. 每日温度 | ✅ 已解决 | [2026-09-27/0739-daily-temperatures.md](2026-09-27/0739-daily-temperatures.md) |
+| 84. 柱状图中最大的矩形（二刷） | ✅ 已解决，待巩固边界与距离 | [2026-09-27/0084-largest-rectangle-in-histogram.md](2026-09-27/0084-largest-rectangle-in-histogram.md) |
 
 ## 2026-09-23
 
