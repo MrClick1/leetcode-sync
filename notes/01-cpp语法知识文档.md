@@ -992,6 +992,90 @@ for (ListNode* head : lists) {
 
 每次取出堆顶节点后，如果它还有下一个节点，就将 `node->next` 放入堆中。堆中最多保存 `k` 个节点。
 
+#### 自定义比较器：struct 与 operator()
+
+2026-09-28 复习：先确定谁应该在堆顶，再写“a 什么时候应该让位给 b”。下面示例独立使用，假设已经包含 `<queue>`、`<vector>` 并使用 `std` 命名空间。
+
+```cpp
+struct Item {
+    int score;
+    int id;
+};
+
+// 分数高的先出；分数相同，id 小的先出
+struct CompareItem {
+    bool operator()(const Item& a, const Item& b) const {
+        if (a.score != b.score) {
+            return a.score < b.score;  // a 分数低，让位给 b
+        }
+        return a.id > b.id;            // a 的 id 大，让位给 b
+    }
+};
+
+priority_queue<Item, vector<Item>, CompareItem> pq;
+pq.push({90, 2});
+pq.push({80, 1});
+pq.push({90, 1});
+// 依次 top() 并 pop()：{90,1}、{90,2}、{80,1}
+```
+
+- `CompareItem` 是类型，`CompareItem{}` 才是这个类型的对象。优先队列的第三个模板参数填写类型。
+- `operator()` 重载函数调用运算符，让比较器对象能像函数一样调用：`CompareItem cmp; bool result = cmp(a, b);`。
+- 参数的 `const Item&` 避免复制，并禁止通过这个引用修改被比较的元素。
+- 参数列表后面的 `const` 表示该成员函数不修改比较器对象的普通成员；它与参数前面的 `const` 含义不同。
+- 自定义类型成员使用 `a.score`；如果元素是节点指针，则按指针指向的值比较，例如 `a->val > b->val` 建立节点值的小顶堆。直接使用默认指针比较不会按照节点的 val 排序。
+
+#### 使用 lambda 自定义优先级（C++17）
+
+lambda 也能作为堆的比较器。需要先定义它，再用 `decltype` 取得类型，并把比较器对象传给构造函数：
+
+```cpp
+auto cmp = [](const Item& a, const Item& b) {
+    if (a.score != b.score) {
+        return a.score < b.score;
+    }
+    return a.id > b.id;
+};
+
+priority_queue<Item, vector<Item>, decltype(cmp)> pq(cmp);
+```
+
+这里两处 `cmp` 的职责不同：
+
+```cpp
+decltype(cmp)  // 这个比较器的类型，放进模板参数
+pq(cmp)        // 用这个比较器对象构造优先队列
+```
+
+在 C++17 中，lambda 闭包类型没有默认构造函数，所以这套写法不能漏掉构造时的 `(cmp)`，即使 lambda 没有捕获变量也一样。为便于复习，统一显式传入比较器对象。
+
+不要写成 `priority_queue<Item, vector<Item>, cmp>`：此处要求类型，而 `cmp` 是对象。
+
+#### sort 与 priority_queue 的比较器方向对照
+
+| 比较规则 | sort 的结果 | priority_queue 的堆顶 |
+|---|---|---|
+| `a < b` / `less<int>` | 小的排前面（升序） | 大的在堆顶（大顶堆） |
+| `a > b` / `greater<int>` | 大的排前面（降序） | 小的在堆顶（小顶堆） |
+
+对 `sort`，`cmp(a,b)` 为 true 表示 a 应排在 b 前面；对 `priority_queue`，可以理解为 a 的优先级低于 b，a 应让位给 b。更统一地说，堆顶取的是比较器所定义顺序中靠后的元素。
+
+假设希望“分数高的先处理，分数相同 id 小的先处理”，两者比较器分别为：
+
+```cpp
+// sort：a 什么时候排在 b 前面？
+if (a.score != b.score) return a.score > b.score;
+return a.id < b.id;
+
+// priority_queue：a 什么时候让位给 b？
+if (a.score != b.score) return a.score < b.score;
+return a.id > b.id;
+```
+
+两者都要求严格弱序：比较依据完全相等时必须返回 false；不能简单使用 `<=`、`>=`，也不能通过 `!cmp(a,b)` 反转规则（相等时会错误地变成 true）。需要逆序时交换比较参数或正确反转各字段的 `<` / `>`。
+
+堆只保证 top 是最高优先级元素，不保证内部存储已经整体排好序。比较器认为等价的元素，其弹出顺序不保证与插入顺序一致；需要确定顺序时加入 id 等第二比较字段。元素入堆后，不要通过外部指针修改排序字段，或改变比较器依赖的外部规则后继续假设堆有序，优先队列不会自动重新调整。
+
 #### 复杂度和限制
 
 - `top()`：O(1)
@@ -1191,7 +1275,7 @@ reverse(nums.begin() + start, nums.end());
 sort(nums.begin(), nums.end());
 ```
 
-`sort(first, last)` 会原地排序半开区间 `[first, last)`，平均时间复杂度为 `O(n log n)`。
+`sort(first, last)` 会原地排序半开区间 `[first, last)`；C++11 起保证最坏 `O(n log n)` 次比较。若单次比较是 O(1)，时间复杂度为 `O(n log n)`。
 不传第三个参数时，默认使用元素类型的 `<` 运算符，因此通常表现为升序。
 
 自定义降序：
@@ -1403,6 +1487,18 @@ public:
 LeetCode 中临时使用的排序规则，通常用 lambda 最直观。
 
 #### 比较器最重要的限制
+
+2026-09-28 对照复习：`sort` 第三个参数接收可调用对象，因此三种形式都可以：
+
+```cpp
+sort(students.begin(), students.end(), compareStudent); // 普通函数，传函数本身
+sort(students.begin(), students.end(), cmp);            // 已定义的 lambda 对象
+sort(students.begin(), students.end(), CompareStudent{}); // 已定义的函数对象类型的实例
+```
+
+以上三行是调用形式示意；`cmp` 和 `CompareStudent` 需要先自行定义。不要写 `compareStudent()`，那表示立即调用函数，而不是将比较规则交给 sort。
+
+同样是按“成绩降序、年龄升序”，sort 返回 `a.score > b.score` / `a.age < b.age`；如果希望 priority_queue 也先弹出高分且年龄小的元素，堆比较器应返回 `a.score < b.score` / `a.age > b.age`。完整的 struct、lambda 和类型/对象区别见 STL 1.7 的 priority_queue 小节。
 
 相等时必须返回 `false`，因此通常使用 `<` 或 `>`，不要使用 `<=` 或 `>=`：
 
@@ -1911,6 +2007,8 @@ C++11 起，std::sort 要求最坏 O(n log n) 次比较，常见实现采用内�
 | 双端队列删除队尾 | `deq.pop_back()` | 返回 `void` |
 | 大顶堆 | `priority_queue<int> heap` | 默认堆顶是最大值 |
 | 小顶堆 | `priority_queue<int, vector<int>, greater<int>> heap` | 堆顶是最小值 |
+| 自定义堆（函数对象） | `priority_queue<T, vector<T>, Compare> heap` | 第三个模板参数是类型，返回 true 表示 a 让位给 b |
+| 自定义堆（lambda） | `priority_queue<T, vector<T>, decltype(cmp)> heap(cmp)` | C++17 显式传入比较器对象 |
 | 读取堆顶 | `heap.top()` | 不删除元素，调用前检查非空 |
 | 删除堆顶 | `heap.pop()` | 返回 `void` |
 
