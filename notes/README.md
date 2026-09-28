@@ -25,6 +25,13 @@
 | 堆与数据流 | [topics/10-堆与数据流.md](topics/10-堆与数据流.md) |
 | 前缀树 Trie | [topics/11-前缀树.md](topics/11-前缀树.md) |
 | 二分查找 | [topics/12-二分查找.md](topics/12-二分查找.md) |
+| 贪心 | [topics/13-贪心.md](topics/13-贪心.md) |
+
+## 2026-09-29
+
+| 题目 | 状态 | 笔记 |
+|---|---|---|
+| 121. 买卖股票的最佳时机 | ✅ 已解决（历史最低价 + 最大利润） | [2026-09-29/0121-best-time-to-buy-and-sell-stock.md](2026-09-29/0121-best-time-to-buy-and-sell-stock.md) |
 
 ## 2026-09-28
 
