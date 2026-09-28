@@ -54,6 +54,8 @@ public:
 
 也可以使用 lambda，并写成 priority_queue<T, vector<T>, decltype(cmp)> pq(cmp)。类型与对象的详细对照见 [C++ 语法文档](../01-cpp语法知识文档.md) 的 priority_queue 小节。
 
+补充：官方通过 static cmp 与 decltype(&cmp) 使用普通函数指针作为比较器。static 消除对 Solution 对象的依赖，decltype(&cmp) 提供类型，构造时 q(cmp) 提供函数指针；它与当前 struct + operator() 是两种合法写法。详见 [C++ 语法文档](../01-cpp语法知识文档.md) 的“3.14 static 关键字”和 STL 1.7 对应示例。
+
 ### 忘记 pop
 
 top() 只读取不删除。循环里不 pop，会反复读到同一个最高频数字，例如示例 1 得到 [1,1]。

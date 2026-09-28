@@ -1051,6 +1051,28 @@ pq(cmp)        // 用这个比较器对象构造优先队列
 
 不要写成 `priority_queue<Item, vector<Item>, cmp>`：此处要求类型，而 `cmp` 是对象。
 
+#### 使用 static 成员函数作为比较器
+
+第 347 题官方写法使用函数指针，而不是比较器结构体：
+
+```cpp
+class Solution {
+public:
+    static bool cmp(const pair<int, int>& a, const pair<int, int>& b) {
+        return a.second > b.second; // 频次小的在堆顶
+    }
+
+    void example() {
+        priority_queue<pair<int, int>, vector<pair<int, int>>,
+                       decltype(&cmp)> q(cmp);
+    }
+};
+```
+
+`&cmp` 是函数指针，`decltype(&cmp)` 是这个指针的类型；`q(cmp)` 将函数指针交给构造函数（函数名在这里可以转换为函数指针）。`static` 使该成员函数不依赖 Solution 对象，可以通过普通函数指针调用。
+
+不能直接把函数名 cmp 当作第三个类型模板参数，也不能把普通非静态成员函数指针直接按此方式传给优先队列；后者还需要对象才能调用。static 的其他用途与 this 的关系见“3.14 static 关键字”。
+
 #### sort 与 priority_queue 的比较器方向对照
 
 | 比较规则 | sort 的结果 | priority_queue 的堆顶 |
@@ -1976,6 +1998,110 @@ C++11 起，std::sort 要求最坏 O(n log n) 次比较，常见实现采用内�
 
 第 41 题要求 O(n) 时间、O(1) 额外空间，因此直接 sort 后扫描的总时间 O(n log n) 不符合要求；另建长度 O(n) 的计数数组也不符合空间要求。
 
+### 3.14 `static` 关键字（2026-09-28 复习）
+
+static 的含义取决于声明位置，不能统一理解为“常量”或“不能修改”。它也不同于负责显式类型转换的 static_cast。
+
+| 位置 | 作用 |
+|---|---|
+| 类的成员函数前 | 不依赖某个对象，没有隐含 this，可通过类名调用 |
+| 类的成员变量前 | 同一个类的各对象共享一份变量，而非每个对象各有一份 |
+| 函数内局部变量前 | 变量具有静态存储期，在多次调用之间保留值；名称仍受局部作用域限制 |
+| 命名空间作用域的函数/变量前 | 名称具有内部链接，只在当前翻译单元中可用 |
+
+#### 静态成员函数与 this
+
+```cpp
+class Example {
+public:
+    int value = 10;
+
+    int normal() const {
+        return value; // 相当于 this->value
+    }
+
+    static int shared() {
+        // return value; // 错误：没有 this，不知道取哪个对象的 value
+        return 0;
+    }
+};
+
+Example obj;
+obj.normal();      // 调用与 obj 相关的普通成员函数
+Example::shared(); // 无需创建对象即可调用静态成员函数
+```
+
+普通成员函数有隐含的 this，指向调用它的对象。静态成员函数没有 this，不能直接访问普通成员；如果显式传入一个对象，仍然可以通过该对象访问其可访问的成员。静态成员函数也可以访问类的静态成员。
+
+类名调用是推荐的表达方式；通过对象调用静态成员函数也合法，但不会因此产生 this。
+
+#### 为什么第 347 题的 cmp 使用 static
+
+比较器只依赖传入的两个 pair，不需要某个 Solution 对象的状态，所以可写为静态成员函数：
+
+```cpp
+static bool cmp(const pair<int, int>& a, const pair<int, int>& b) {
+    return a.second > b.second;
+}
+```
+
+在类内创建堆时：
+
+```cpp
+priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(&cmp)> q(cmp);
+```
+
+- `static`：允许按普通函数指针方式调用 cmp，无需额外绑定一个 Solution 对象。
+- `decltype(&cmp)`：取得函数指针类型，填写第三个模板参数。
+- `q(cmp)`：将具体的函数指针传给堆的构造函数。
+- 加 static 不会把函数名变成类型，第三个参数仍不能直接填 cmp。
+- 自己使用的 struct + operator() 同样正确，并不要求改成 static。比较器对象自身就是可调用对象，其 operator() 可以是普通非静态成员函数。
+
+#### 静态局部变量：跨调用保留值
+
+```cpp
+int countCalls() {
+    static int count = 0;
+    return ++count;
+}
+
+// 连续调用三次，依次返回 1、2、3
+```
+
+count 只初始化一次，在函数返回后仍然存在。去掉 static，每次进入函数都会重新创建局部变量并初始化为 0，结果每次都是 1。对于需要运行时初始化的静态局部变量，初始化在第一次执行到该声明时发生；C++11 起该初始化具有线程安全保证，但后续的 ++ 操作并不会因此自动线程安全。
+
+刷题中不要为了保留变量随意加 static：静态局部变量不会在下一次调用或创建新 Solution 对象时自动重置，可能污染下一组测试。
+
+#### 静态成员变量：所有对象共享
+
+```cpp
+class Counter {
+public:
+    inline static int count = 0; // C++17：在类内定义并初始化
+
+    void add() {
+        ++count;
+    }
+};
+
+Counter a, b;
+a.add();
+b.add();
+// Counter::count == 2
+```
+
+这里 a 和 b 共享同一份 count。没有 static 的普通数据成员，则每个对象各有一份。以上 inline static 写法要求 C++17；传统写法通常在类内声明 static int count，再在类外定义 int Counter::count = 0。
+
+#### 文件作用域：内部链接
+
+```cpp
+// 某个 .cpp 的命名空间作用域
+static int helperValue = 0;
+static void helper() {}
+```
+
+这些名称具有内部链接，不会作为外部链接名称供其他翻译单元直接引用。一个翻译单元可粗略理解为一个 .cpp 文件及其预处理展开的包含内容。它描述的是链接可见性，并不表示变量只读。
+
 ## 4. 快速查询表
 
 ### STL
@@ -2032,6 +2158,9 @@ C++11 起，std::sort 要求最坏 O(n log n) 次比较，常见实现采用内�
 | 只读且不复制参数 | `const T& value` | 函数内不能修改 |
 | 修改调用者对象 | `T& value` | 修改会作用于原对象 |
 | 显式类型转换 | `static_cast<int>(value)` | 转换后再进行有符号运算 |
+| 静态成员函数 | `static bool cmp(...)` | 没有 this，可通过普通函数指针调用 |
+| 静态函数比较器建堆 | `priority_queue<T, vector<T>, decltype(&cmp)> q(cmp)` | 模板传类型，构造传函数指针 |
+| 保留局部变量的值 | `static int count = 0` | 多次调用共享状态，刷题时注意测试间污染 |
 | 范围循环中修改元素 | `for (auto& x : values)` | 必须使用引用 |
 
 ## 维护约定
