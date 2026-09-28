@@ -30,6 +30,7 @@
 
 | 题目 | 状态 | 笔记 |
 |---|---|---|
+| 215. 数组中的第 K 个最大元素 | ✅ 迭代大顶堆版本通过，快速选择待巩固 | [2026-09-28/0215-kth-largest-element-in-an-array.md](2026-09-28/0215-kth-largest-element-in-an-array.md) |
 | 347. 前 K 个高频元素 | ✅ 全量大顶堆版本通过，进阶待学习 | [2026-09-28/0347-top-k-frequent-elements.md](2026-09-28/0347-top-k-frequent-elements.md) |
 | 912. 排序数组（快排、归并、堆排序） | 待复习；快排、递归/迭代堆排序通过，归并待确认 | [2026-09-28/0912-sort-an-array.md](2026-09-28/0912-sort-an-array.md) |
 
