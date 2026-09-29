@@ -32,6 +32,7 @@
 
 | 题目 | 状态 | 笔记 |
 |---|---|---|
+| 39. 组合总和 | ✅ 已通过并复核；startIndex、重复选取及 sum 撤销区别待巩固 | [2026-09-29/0039-combination-sum.md](2026-09-29/0039-combination-sum.md) |
 | 17. 电话号码的字母组合 | ✅ 用户原版与固定数字位置新版均已通过并复核；循环范围与终止条件对照待巩固 | [2026-09-29/0017-letter-combinations-of-a-phone-number.md](2026-09-29/0017-letter-combinations-of-a-phone-number.md) |
 | 78. 子集 | ✅ 已通过并复核（每个节点收集，i+1 避免重复） | [2026-09-29/0078-subsets.md](2026-09-29/0078-subsets.md) |
 | 46. 全排列 | 代码已复核，本地校验通过；待确认 LeetCode 提交 | [2026-09-29/0046-permutations.md](2026-09-29/0046-permutations.md) |

@@ -429,6 +429,68 @@ unordered_set<char> window;
 unordered_set<string> words;
 ```
 
+#### 元素类型的哈希要求：`unordered_set<vector<int>>` 为什么报错
+
+2026-09-29，39. 组合总和中尝试把整条 `vector<int> path` 存入集合，编译器报告 `Solution` 的默认构造函数被隐式删除。真正原因是集合的元素类型没有默认可用的哈希函数，并不是忘记写构造函数。
+
+```cpp
+// 第二个模板参数默认是 std::hash<Key>
+unordered_set<int> numbers;   // 默认使用 hash<int>
+unordered_set<string> words;  // 默认使用 hash<string>
+
+// C++17 标准库没有提供可用的 hash<vector<int>>
+// unordered_set<vector<int>> paths; // 无法这样直接构造
+```
+
+哈希函数根据 key 计算一个哈希值，帮助容器定位存储位置。不同 key 可以产生相同哈希值，容器还会进行相等比较；哈希值不是唯一编号。`vector<int>` 有相等比较，但这不代表它也有标准库提供的哈希函数。
+
+错误传递过程：`hash<vector<int>>` 不可用 → `uset` 不能默认构造 → 含有它的 `Solution` 自动生成的默认构造函数不可用 → 测试器调用 `Solution()` 时报错。自行添加空的 `Solution() {}` 也不能补上哈希函数。不要笼统说所有 vector 都不支持：标准库另有 `vector<bool>` 的哈希特化。
+
+两种语法选择：
+
+```cpp
+#include <set>
+set<vector<int>> paths; // 有序集合，利用 vector 的字典序比较
+```
+
+或者给无序集合显式提供一个自定义哈希类型：
+
+```cpp
+#include <cstddef>
+#include <functional>
+#include <unordered_set>
+#include <vector>
+
+struct VectorHash {
+    size_t operator()(const vector<int>& values) const {
+        size_t result = 0;
+        for (int value : values) {
+            result ^= hash<int>{}(value) + size_t{0x9e3779b9u}
+                      + (result << 6) + (result >> 2);
+        }
+        return result;
+    }
+};
+
+unordered_set<vector<int>, VectorHash> paths;
+```
+
+这里只需理解“第二个参数提供如何计算哈希值”，不必为组合总和背诵这个哈希实现。自定义哈希必须保证相等 key 的哈希值相等；允许哈希冲突，由容器比较实际 key。计算长度为 L 的 vector 的哈希需要 O(L)，不能把整体查询简单说成与 key 长度无关的 O(1)。
+
+无论 `set` 还是 `unordered_set`，默认都按序列本身区分 `[2,2,3]` 与 `[2,3,2]`，不会自动按“相同组合”去重。如果用排序后的路径作为 key，查询和插入必须都使用排序后的副本：
+
+```cpp
+vector<int> temp = path;
+sort(temp.begin(), temp.end());
+if (paths.insert(temp).second) { // insert 返回值的 second 表示本次是否插入成功
+    res.push_back(temp);
+}
+```
+
+保留成员集合时，新的独立求解入口还应 `paths.clear()`。但 39 更适合用 `startIndex` 从生成阶段限制选择顺序，不依赖事后集合去重，详见 [39 日期笔记](2026-09-29/0039-combination-sum.md)。
+
+依据：[unordered_set 默认 Hash 参数](https://eel.is/c++draft/unord.set)、[hash 特化与禁用规则](https://eel.is/c++draft/unord.hash)、[vector 的哈希声明](https://eel.is/c++draft/vector.syn)。本轮在临时目录用 g++ C++17 复现原声明的编译错误，并验证 `set<vector<int>>` 与自定义哈希写法可编译、查询符合序列相等规则。
+
 #### `insert`：插入元素
 
 最常见的写法：
@@ -1633,6 +1695,47 @@ void printVector(const vector<int>& nums) {
 ```
 
 只读的复杂对象参数通常优先使用 `const T&`。
+
+#### 参数按位置对应，不按变量名字匹配
+
+2026-09-29，39. 组合总和中遇到递归可以编译、但答案为空的问题。
+
+```cpp
+void backtracking(const vector<int>& candidates,
+                  int sum, int startIndex, int target);
+
+// 错误：sum 接收到旧 startIndex，startIndex 接收到 sum+num
+backtracking(candidates, startIndex, sum + num, target);
+
+// 本题所需：更新总和，下一层从当前选择的下标 i 开始
+backtracking(candidates, sum + num, i, target);
+```
+
+声明里的变量称为形参，调用时提供的表达式称为实参。第几个实参对应第几个形参；调用处变量名称不会改变这个对应关系。sum 和 startIndex 都是 int，交换位置仍满足类型要求，编译器通常无法判断“总和”与“下标”的业务含义，必须自己核对。
+
+检查递归调用时依次问：参数位置是否一致？新总和是否包含本次选择？下一层候选起点是否对应当前 i？不能只看类型相同就认为参数正确。具体复现见 [39 的参数顺序问题](2026-09-29/0039-combination-sum.md)。
+
+#### 递归参数 `sum + num` 与 `sum += num` 的撤销区别
+
+39. 组合总和通过后，对照代码随想录时复习：
+
+```cpp
+// 写法一：没有改变本层 sum，整数参数按值传递给下一层
+path.push_back(num);
+backtracking(candidates, sum + num, i, target);
+path.pop_back();
+
+// 写法二：先改变本层 sum，所以尝试其他候选前必须恢复
+sum += num;
+path.push_back(num);
+backtracking(candidates, sum, i, target);
+sum -= num;
+path.pop_back();
+```
+
+`sum+num` 只是计算一个值，不赋值给 sum。本层 sum=4、num=3 时，第一种写法使下一层自己的 sum=7，本层仍为 4，无需 `sum-=num`。第二种写法主动将本层 sum 改成 7，所以下层返回后要减回去；即使 sum 是值传递，本层对它的主动修改也不会因为递归返回而自动撤销。
+
+成员 path 是共享状态，两种写法都修改了它，所以都要 pop_back。规律是“撤销自己实际做过的修改”，不是所有回溯都必须写 sum 减法。形参若改为 `int&` 则共享关系不同，不能照搬这里的按值分析。
 
 ### 3.2 花括号初始化与函数参数对应
 
