@@ -32,6 +32,7 @@
 
 | 题目 | 状态 | 笔记 |
 |---|---|---|
+| 17. 电话号码的字母组合 | ✅ 用户原版已通过；每层固定一个数字的简化版已本地复核，思路待巩固 | [2026-09-29/0017-letter-combinations-of-a-phone-number.md](2026-09-29/0017-letter-combinations-of-a-phone-number.md) |
 | 78. 子集 | ✅ 已通过并复核（每个节点收集，i+1 避免重复） | [2026-09-29/0078-subsets.md](2026-09-29/0078-subsets.md) |
 | 46. 全排列 | 代码已复核，本地校验通过；待确认 LeetCode 提交 | [2026-09-29/0046-permutations.md](2026-09-29/0046-permutations.md) |
 | 763. 划分字母区间 | ✅ 已通过，动态边界与贪心切分待巩固 | [2026-09-29/0763-partition-labels.md](2026-09-29/0763-partition-labels.md) |

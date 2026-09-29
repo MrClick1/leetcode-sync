@@ -90,6 +90,51 @@ s.push_back('!');  // 末尾添加字符
 s.pop_back();      // 删除末尾字符
 ```
 
+#### 在末尾添加、删除一个字符：回溯常用操作
+
+2026-09-29，来自 17. 电话号码的字母组合：构造一个候选字符串时，每次添加一个字母，递归返回后撤销这个字母。
+
+```cpp
+string path = "a";
+char alpha = 'd';
+
+path.push_back(alpha);  // "a" -> "ad"，末尾添加一个 char
+path.pop_back();        // "ad" -> "a"，删除末尾一个字符
+```
+
+| 需求 | 写法 | 含义与前提 |
+|---|---|---|
+| 末尾添加一个字符 | `path.push_back('a')` | 参数是 char，返回 void |
+| 末尾添加一个字符 | `path += 'a'` | 同样有效；此表达式返回 path 的引用 |
+| 末尾添加字符串 | `path += "abc"` / `path.append("abc")` | 添加整段字符串，不是只添加一个字符 |
+| 删除末尾一个字符 | `path.pop_back()` | 返回 void；必须保证字符串非空 |
+| 读取末尾字符 | `path.back()` | 不删除字符；必须保证字符串非空 |
+| 清空整个字符串 | `path.clear()` | 删除全部字符，不是撤销最后一次添加 |
+
+`'a'` 是一个 char，`"a"` 是字符串字面量；不要写 `path.push_back("a")`。`pop_back()` 不会返回被删除的字符，若还要使用它，应先读取：
+
+```cpp
+if (!path.empty()) {
+    char last = path.back();
+    path.pop_back();
+    // 可以继续使用 last
+}
+```
+
+回溯中的典型配对是：
+
+```cpp
+path.push_back(alpha);             // 做选择：添加本层字符
+backtracking(digits, index + 1);   // 探索下一数字；返回时下层已撤销下层的选择
+path.pop_back();                   // 撤销本层字符，恢复添加前的 path
+```
+
+这里每次 pop_back 之前都有对应的 push_back，因此不需要额外用 `if (!path.empty())` 包住撤销。如果路径为空，说明选择/撤销的配对有问题，应检查逻辑，而不是悄悄跳过撤销。
+
+用户写过 `int alpha = alphas[j]; path += alpha;`：在本题小写英文字母范围内可以工作。`alphas[j]` 本来是 char，先转换成 int，追加时又转换回 char；它不是把整数转换成十进制字符串再追加。更清晰的是直接使用 `char alpha`，或 `for (char alpha : alphas)`。若需要追加整数的文本，用 `path += to_string(value)`，含义不同。
+
+本次临时 C++17 校验确认添加、读取末尾、删除、清空以及上述 char/int 转换示例。算法与题型比较见 [17 的复盘笔记](2026-09-29/0017-letter-combinations-of-a-phone-number.md)。
+
 #### 截取子串
 
 函数形式：
@@ -2117,6 +2162,9 @@ static void helper() {}
 | 判断哈希 key | `need.count(c) > 0` | 不会插入 key |
 | 查找哈希 key | `need.find(c) != need.end()` | 可通过迭代器读取 value |
 | 哈希计数 | `need[c]++` | 不存在时自动插入并初始化为 0 |
+| 字符串末尾添加字符 | `path.push_back(ch)` / `path += ch` | ch 使用 char；push_back 返回 void |
+| 字符串末尾删除字符 | `path.pop_back()` | 必须非空；返回 void；不等于 clear |
+| 字符串末尾读取字符 | `path.back()` | 必须非空；不删除字符 |
 | `vector` 末尾加入 | `nums.push_back(value)` | 一次加入一个 `value_type` |
 | `deque` 两端加入 | `deq.push_front(value)` / `deq.push_back(value)` | 必须明确方向 |
 | 集合插入 | `uset.insert(value)` | 自动去重，不使用 `push` |
