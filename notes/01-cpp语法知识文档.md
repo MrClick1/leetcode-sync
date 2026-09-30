@@ -152,6 +152,44 @@ path.pop_back();                   // 撤销本层字符，恢复添加前的 pa
 
 #### 截取子串
 
+##### 2026-09-30 复习：先记“起点 + 个数”
+
+用户开始 131. 分割回文串时再次询问 substr。本段只复习字符串操作，不提前展开该题的算法。
+
+```cpp
+string s = "aab";
+
+s.substr(0, 1); // "a"：从下标 0 开始，取 1 个字符
+s.substr(0, 2); // "aa"：从下标 0 开始，取 2 个字符
+s.substr(1, 2); // "ab"：从下标 1 开始，取 2 个字符，不是取到下标 2 之前
+s.substr(2, 1); // "b"
+s.substr(0, 3); // "aab"
+```
+
+口诀：**第一个参数选起点，第二个参数数个数；包含终点要加一。**
+
+若使用下标 start、end，且两端都包含，先确保 0<=start<=end<s.size()，再写：
+
+```cpp
+string part = s.substr(start, end - start + 1);
+```
+
+例如 s="abcdef"，取下标 2、3、4 这三个字符：s.substr(2,3) 得到 "cde"；写成 s.substr(2,4) 则是取 4 个字符，得到 "cdef"。截取长度为 0 会返回空串，如 s.substr(2,0)。不要把负长度或反向边界交给 substr，参数会转成无符号整数，不能代替范围检查。
+
+本轮临时 C++17 校验通过：上述示例、闭区间长度、结果与原字符串独立、零长度、空字符串合法起点、超长截到末尾，以及起点超过 size()/负起点的 out_of_range。只验证语法，未实现或验证 131 解法。
+
+##### 完整用法与边界
+
+2026-09-30，131 首版误写 s.substr(s.begin()+startIndex, length)：第一个实参是迭代器，类型不符合 substr 的起点要求。下面几个常见接口不要混淆：
+
+| 调用 | 参数含义 |
+|---|---|
+| `s.substr(start, length)` | 整数起始下标与字符数量，返回新的字符串 |
+| `sort(s.begin()+left, s.begin()+right)` | 迭代器半开区间，原地排序；不包含 right |
+| `reverse(s.begin()+left, s.begin()+right)` | 迭代器半开区间，原地反转；不包含 right |
+
+具体函数的接口不同，不要概括成所有成员函数都用下标或所有区间操作都用迭代器。取闭区间 [startIndex,i] 的字符串，写 s.substr(startIndex, i-startIndex+1)。
+
 函数形式：
 
 ```cpp
