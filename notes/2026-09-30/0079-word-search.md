@@ -1,7 +1,7 @@
 # 79. 单词搜索
 
 - 开始日期：2026-09-30。
-- 状态：用户修正版已 LeetCode 提交通过；C++17 对用户通过版、所给官解及助手 k 下标整理版，共 3153 个输入与独立参考算法复核一致。已补记差异、简化方式与记忆框架，不将通过等同于熟练。
+- 状态：用户 path 修正版已 LeetCode 提交通过；用户随后独立改为 k 下标版，逻辑正确，尚待该版本的力扣提交反馈。C++17 对两种用户版、所给官解及助手整理版，各用 3153 个输入与独立参考算法复核一致。已补记差异、简化方式与记忆框架，不将通过等同于熟练。
 - 学习方式：在 LeetCode 网页端编写，只记录笔记，不创建本地脚手架。新题不提前提示，用户本轮请求诊断后再展开分析。
 
 ## 题目要求
@@ -271,6 +271,96 @@ dfs(0,0,0) 检查 A 对 word[0]，标记 A；沿右边进入 dfs(0,1,1)，检查
 - exist 找到成功起点可立即 return true；前提是本次递归已完成自身状态恢复。无需维护两个嵌套循环的成功 break。
 - k+1 是按值传递给下一层，不改变本层 k，无需 k--，与 22 括号生成传 open+1 相同。
 
+## 用户随后写出的 k 下标版
+
+下面保留用户原样逻辑，仅调整排版。这是用户独立修改的版本，不再需要 path；本地复核通过，不提前记为再次力扣提交通过。
+
+```cpp
+class Solution {
+public:
+    vector<pair<int, int>> directions = {
+        {-1, 0}, {1, 0}, {0, -1}, {0, 1}
+    };
+
+    bool backtracking(const vector<vector<char>>& board, int k, int r, int c,
+                      vector<vector<bool>>& visited, const string& word) {
+        if (board[r][c] != word[k]) return false;
+        if (k == static_cast<int>(word.size()) - 1 && board[r][c] == word[k]) {
+            return true;
+        }
+
+        bool flag = false;
+        for (int i = 0; i < 4; ++i) {
+            int newR = r + directions[i].first;
+            int newC = c + directions[i].second;
+            if (newR >= 0 && newR < board.size() &&
+                newC >= 0 && newC < board[0].size() &&
+                visited[newR][newC] == false) {
+                visited[newR][newC] = true;
+                flag = backtracking(board, k + 1, newR, newC, visited, word);
+                visited[newR][newC] = false;
+                if (flag == true) return true;
+            }
+        }
+        return flag;
+    }
+
+    bool exist(vector<vector<char>>& board, string word) {
+        int n = (int)board.size();
+        int m = (int)board[0].size();
+        vector<vector<bool>> visited(n, vector<bool>(m, false));
+        bool flag = false;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                visited[i][j] = true;
+                flag = backtracking(board, 0, i, j, visited, word);
+                visited[i][j] = false;
+                if (flag == true) return true;
+            }
+        }
+        return flag;
+    }
+};
+```
+
+### 逻辑正确：进度检查与访问标记各自一致
+
+入口检查当前格是否匹配 word[k]，失败就停止，匹配最后一个字符就成功；只有尚未完成时才探索邻居 k+1。因此访问 word[k] 时 k 始终在合法范围内，所有起点也会检查 word[0]，解决了旧 path 版遗漏首字母筛选的问题。
+
+用户仍保留“调用者管理所选格的标记”，没有完全改成官解的“本层管理当前格”：
+
+| 标记分工 | 用户新 k 版 | 所给官解 |
+|---|---|---|
+| 起点 | exist 标记，调用后撤销 | exist 不标记，由 check 处理 |
+| 邻居 | 父调用标记邻居，子调用返回后父调用撤销 | 子调用标记自己的当前格，返回前自己撤销 |
+| 匹配失败或最后字符成功 | 直接返回，调用者仍会撤销当前格 | 返回前尚未标记当前格，无本层标记需撤销 |
+
+两种分工都正确，关键是不要混用。用户入口的 visited[r][c] 已由调用者置 true，是当前路径的一部分；不应再简单加 if(visited[r][c]) return false，否则会拒绝每一个起点。若改为官解的本层管理方式，必须同时移除调用者的预先标记。
+
+用户当前成功返回也会恢复现场，因为顺序是：
+
+```cpp
+visited[newR][newC] = true;
+bool found = backtracking(board, k + 1, newR, newC, visited, word);
+visited[newR][newC] = false; // 先撤销本层选择的邻居
+if (found) return true;     // 再把成功传回去
+```
+
+本层返回时自己的当前格仍由父调用负责撤销；exist 也在成功返回前撤销起点。不是每一个提前 return 都有问题，而是“本层修改的共享状态是否恢复”要检查清楚。
+
+### 保留框架即可简化的两处
+
+第一处，入口已排除字符不匹配，成功条件无需重复比较：
+
+```cpp
+if (board[r][c] != word[k]) return false;
+if (k == static_cast<int>(word.size()) - 1) return true;
+```
+
+第二处，两函数中只要 flag 为 true 就已经立即返回，因此循环正常结束时不可能还有成功分支；末尾 return flag 可以直接写 return false。flag 也可以按上面的小段代码定义在每次调用的位置，不必放在整个函数开头。都是简化，不是修复逻辑错误。
+
+记忆：坐标决定在哪个格子，k 决定匹配哪个字母，visited 决定当前路径哪些格子不能再用；进入一个邻居就传 k+1。标记与撤销成对放在调用者，或者成对放在本层，只选一套一致的分工。
+
 ## 按上述任务定义整理的 k 版本
 
 下面是助手的等价整理版，不是用户已经独立写出的新版。将边界、访问标记与字符匹配统一在入口检查，使每个起点与邻居调用使用相同逻辑。
@@ -324,11 +414,11 @@ word 长于格子总数可直接 false，因为每格最多使用一次；这条
 
 ## 通过后的复核与复杂度
 
-系统临时目录用 g++ -std=c++17 -O2 -D_GLIBCXX_ASSERTIONS 编译：用户通过版、所给官解、助手整理版各对 13 个固定、2940 个穷举、200 个确定种子随机输入，共 3153 个输入，与独立广度优先枚举简单路径的参考一致。参考保存路径文字和位掩码，不用逐字符前缀剪枝，枚举到 word 长度为止。
+系统临时目录用 g++ -std=c++17 -O2 -D_GLIBCXX_ASSERTIONS 编译：用户通过的 path 版、用户随后写出的 k 版、所给官解、助手整理版，各对 13 个固定、2940 个穷举、200 个确定种子随机输入，共 3153 个输入，与独立广度优先枚举简单路径的参考一致。参考保存路径文字和位掩码，不用逐字符前缀剪枝，枚举到 word 长度为止。
 
 固定用例含题目三个示例、单格成功/失败、不可重复用格、非方形网格、先前 ABC 漏报与 CD 误报反例、错误首字母但后续可匹配、重复字母使用不同格及大小写区分。穷举覆盖行数 1..2、列数 1..3 的全部 A/B 网格与长度 1..4 的全部 A/B 单词；随机覆盖最大 3×3 网格及长度 1..6 单词。不是对题目最大规模的所有输入做穷举。
 
-全部复用同一组 Solution 对象，board 与 word 不变，用户辅助函数返回后 path 恢复、三版 visited 恢复均通过。当前记录为用户 path 版已力扣通过；官解/助手 k 版本地验证正确，不称作用户已经独立实现并提交。临时测试不进入仓库，不建题目脚手架。
+全部复用同一组 Solution 对象，board 与 word 不变，用户 path 版辅助函数返回后 path 恢复、四版 visited 恢复均通过。用户新 k 版还直接检查辅助调用前后标记完全相同：调用者预先标记的起点仍保留，后代标记均撤销；调用者随后解除起点标记，整个 visited 为 false。当前记录为用户 path 版已力扣通过；用户新 k 版只收到代码，尚待力扣提交反馈，官解/助手版为本地参考。临时测试不进入仓库，不建题目脚手架。
 
 令 L=word.length。k 方案最坏时间 O(mn×3^L)：枚举 mn 个起点，第一步最多 4 个方向，后续不能回到上一格，最多 3 个继续方向；已访问约束和边界还能减少分支。辅助空间 O(mn+L)，包括 visited 与递归栈。指数最坏搜索不会因删掉 path 就变成线性；简化主要减少冗余状态与操作。
 
