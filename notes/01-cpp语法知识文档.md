@@ -1737,6 +1737,33 @@ path.pop_back();
 
 成员 path 是共享状态，两种写法都修改了它，所以都要 pop_back。规律是“撤销自己实际做过的修改”，不是所有回溯都必须写 sum 减法。形参若改为 `int&` 则共享关系不同，不能照搬这里的按值分析。
 
+#### 局部路径通过引用共享，整数计数通过值传递
+
+2026-09-30，22. 括号生成中，用户把成员 res/path 改成入口局部变量，并以引用传给辅助函数：
+
+```cpp
+void backtracking(vector<string>& res, string& path,
+                  const int& n, int left, int right);
+
+vector<string> res;
+string path;
+backtracking(res, path, n, 0, 0);
+```
+
+res/path 每次进入入口函数都重新构造为空，不用 clear；递归中的引用仍指向同一份对象，路径追加后仍需 pop_back。res.push_back(path) 将当前字符串复制进结果，后续撤销路径不会撤销已收集的结果。
+
+```cpp
+// 主动修改本层变量，需要恢复本层的 left
+++left;
+backtracking(res, path, n, left, right);
+--left;
+
+// 只是计算参数，本层的 left 没变，不需要 --left
+backtracking(res, path, n, left + 1, right);
+```
+
+left/right 是 int 按值传递，下一层有自己的计数；但 ++left 改的是调用处本层的计数，递归返回不会自动撤销这条 ++。相反，left+1 没有赋值给 left，只给下一层传了一个新数值。两种写法均正确，撤销只针对实际改变的本层或共享状态。n 是小整数，const int& 合法，直接 int n 也够用。具体对照见 [22. 括号生成](2026-09-30/0022-generate-parentheses.md)。
+
 ### 3.2 花括号初始化与函数参数对应
 
 ```cpp
