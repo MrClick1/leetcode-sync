@@ -90,6 +90,21 @@ s.push_back('!');  // 末尾添加字符
 s.pop_back();      // 删除末尾字符
 ```
 
+#### 字符下标与末尾终止字符
+
+实际字符串内容的下标范围是 [0,s.size())。std::string 另允许读取位置 s.size() 的终止字符，不能把这一位置当作实际字母：
+
+```cpp
+string s = "ABC";
+s[2];          // 'C'，最后一个实际字符
+s[s.size()];   // '\0'，末尾终止字符
+s.at(s.size()); // 抛出 out_of_range
+```
+
+operator[] 的要求是下标不大于 size()；大于 size() 仍非法，不保证检查或抛异常。不能把终止字符改成非零字符，也不能把 string 的此规则推广到 vector。依据：[标准草案的下标访问](https://eel.is/c++draft/string.access)、[字符串末尾对象](https://eel.is/c++draft/basic.string.general)。
+
+2026-09-30，79 单词搜索通过版未先匹配首字母，错误起点的后续字符匹配到单词长度后，可能读取 word[word.size()]；题目只有字母，不能匹配 '\0'，所以不是必然越界。但算法更适合显式检查进度与字符，不依赖终止字符拒绝后续选择。改为 k 进度下标，当前字符匹配且 k==word.size()-1 时直接成功，边界含义更清楚。详见 [79 的复盘](2026-09-30/0079-word-search.md)。
+
 #### 在末尾添加、删除一个字符：回溯常用操作
 
 2026-09-29，来自 17. 电话号码的字母组合：构造一个候选字符串时，每次添加一个字母，递归返回后撤销这个字母。
@@ -1714,6 +1729,23 @@ backtracking(candidates, sum + num, i, target);
 声明里的变量称为形参，调用时提供的表达式称为实参。第几个实参对应第几个形参；调用处变量名称不会改变这个对应关系。sum 和 startIndex 都是 int，交换位置仍满足类型要求，编译器通常无法判断“总和”与“下标”的业务含义，必须自己核对。
 
 检查递归调用时依次问：参数位置是否一致？新总和是否包含本次选择？下一层候选起点是否对应当前 i？不能只看类型相同就认为参数正确。具体复现见 [39 的参数顺序问题](2026-09-29/0039-combination-sum.md)。
+
+2026-09-30，79. 单词搜索中再次遇到两个 int 参数传反：
+
+```cpp
+// 函数声明的坐标顺序是行 r、列 c
+bool backtracking(const vector<vector<char>>& board, string& path,
+                  int r, int c, vector<vector<bool>>& visited,
+                  const string& word);
+
+// 错误：列的值传给 r，行的值传给 c
+backtracking(board, path, newC, newR, visited, word);
+
+// 所选单元格、访问标记和下一层坐标应一致
+backtracking(board, path, newR, newC, visited, word);
+```
+
+编译器只能看到这两个位置都接受 int，不能识别行列的含义。核对时把坐标作为一对 (行,列)，让 board[newR][newC]、visited[newR][newC] 和递归参数 newR,newC 使用同一顺序。详见 [79 的坐标诊断](2026-09-30/0079-word-search.md)。
 
 #### 递归参数 `sum + num` 与 `sum += num` 的撤销区别
 
