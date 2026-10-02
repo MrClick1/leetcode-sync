@@ -36,6 +36,7 @@
 | 322. 零钱兑换 | 用户一维 DP 力扣通过；记忆化搜索暂缓，先完成 Hot 100 DP 首轮 | [2026-10-02/0322-coin-change.md](2026-10-02/0322-coin-change.md) |
 | 139. 单词拆分 | 前缀长度 DP 已力扣通过；从思路转为代码仍待巩固 | [2026-10-02/0139-word-break.md](2026-10-02/0139-word-break.md) |
 | 300. 最长递增子序列 | O(n²) DP 与贪心加二分均已力扣通过；最小结尾、二分对象与等号边界待巩固 | [2026-10-02/0300-longest-increasing-subsequence.md](2026-10-02/0300-longest-increasing-subsequence.md) |
+| 152. 乘积最大子数组 | 双数组 DP 已力扣通过；最大最小状态、三个候选与官解对照待复习 | [2026-10-02/0152-maximum-product-subarray.md](2026-10-02/0152-maximum-product-subarray.md) |
 
 ## 2026-09-30
 
