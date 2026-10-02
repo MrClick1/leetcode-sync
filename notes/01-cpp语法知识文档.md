@@ -1729,6 +1729,60 @@ answer = min(answer, currentLength);
 
 两个参数的类型应兼容，避免一个是 `int`、另一个是 `size_t` 导致模板推导失败。
 
+### 2.6 `max_element` 与 `min_element` 找极值元素
+
+2026-10-02，来自 152 乘积最大子数组官解的 `*max_element(maxF.begin(), maxF.end())`。理解时拆成两步：先找到最大元素的位置，再取出那个位置的元素。
+
+```cpp
+vector<int> values = {2, 6, -12, 4};
+
+auto it = std::max_element(values.begin(), values.end());
+int value = *it;  // 6
+```
+
+`max_element` 返回迭代器，it 指向 values 中的 6。迭代器是用来表示容器中元素位置的对象，不是整数下标。`auto` 让编译器推导类型；此处 it 的类型是 vector<int>::iterator。前面的 `*` 是一元解引用运算，表示读取 it 指向的元素；乘法运算 `a*b` 则有两个操作数。
+
+```cpp
+int value = *std::max_element(values.begin(), values.end());
+// 等价于先得到 it，再写 int value = *it;
+```
+
+值、位置与下标要分清：
+
+| 表达式 | 在上例中的含义 |
+|---|---|
+| `values.begin()` | 指向第一个元素 2 的迭代器 |
+| `values.end()` | 最后一个元素 4 后面的位置，不指向有效元素 |
+| `it` | 指向最大元素 6 的迭代器 |
+| `*it` | 最大元素的值 6 |
+| `it - values.begin()` | 最大元素的下标 1 |
+
+迭代器相减适用于 vector 这样的随机访问迭代器，不能推广到所有容器的迭代器。若只需要最大值，不必计算下标。
+
+两个参数表示半开区间 `[first,last)`。使用 begin/end 就搜索整个容器，不需要先排序，也不会修改元素。默认比较找到最大值；若最大值重复，返回第一个最大元素的迭代器。
+
+```cpp
+auto largest = std::max_element(values.begin(), values.end());
+auto smallest = std::min_element(values.begin(), values.end());
+// 非空前提下：*largest 为 6，*smallest 为 -12
+```
+
+`std::max(a,b)` 直接得到两个元素中较大的那个；`std::max_element(first,last)` 搜索一个区间，返回极值元素的迭代器。二参数 max 的返回类型实际上是 const T&，这里不将其等同于“返回下标”。
+
+空区间时 max_element 返回传入的 last，不能解引用。整个空 vector 的情况下，它就是 end()：
+
+```cpp
+auto it = std::max_element(values.begin(), values.end());
+if (it != values.end()) {
+    int value = *it;
+    // 使用 value
+}
+```
+
+152 题保证输入非空，maxF 与输入等长，因此官解可以直接返回 `*max_element(...)`。这些算法位于 `<algorithm>`；普通非空区间含 N 个元素时进行 N-1 次比较，时间 O(N)，只需常数辅助空间。
+
+记忆时把 `max_element` 看成“找到最大元素的位置”，把 `*` 看成“取出该位置的元素”。
+
 ## 3. 其他重要语法
 
 ### 3.1 函数参数：值、引用与 `const` 引用
@@ -2529,6 +2583,9 @@ long long integerPow(long long base, int exponent) {
 | 自定义排序 | `sort(first, last, comp)` | `comp(a, b)` 为真表示 `a` 在 `b` 前；相等时必须为假 |
 | 取较小值 | `min(a, b)` | 参数类型应兼容 |
 | 取较大值 | `max(a, b)` | 参数类型应兼容 |
+| 查找区间最大元素 | `max_element(first, last)` | 返回迭代器；并列时选第一个 |
+| 读取区间最大值 | `*max_element(first, last)` | 区间必须非空，空区间不能解引用 |
+| 查找区间最小元素 | `min_element(first, last)` | 返回迭代器；区间为 `[first,last)` |
 
 ### 其他语法
 

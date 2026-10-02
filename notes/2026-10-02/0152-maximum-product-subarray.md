@@ -81,7 +81,16 @@ minMul[i - 1] * nums[i]          // 延续之前的最小乘积
 res = max(res, maxMul[i]);
 ```
 
-官解最后的 *max_element(maxF.begin(),maxF.end()) 中，max_element 返回指向最大元素的迭代器，前面的 * 取出那个元素的值。题目保证数组非空，最后再扫描一次仍是 O(n) 时间；用户不需要改成这种写法。
+官解最后的 *max_element(maxF.begin(),maxF.end()) 可以拆成两步：
+
+```cpp
+auto it = max_element(maxF.begin(), maxF.end());
+return *it;
+```
+
+max_element 在 [begin,end) 内找到最大元素，返回指向它的迭代器；一元 * 解引用，取出该位置的元素。例 maxF=[2,6,-12,4]，it 指向下标 1 的 6，*it 为 6。it 本身不是整数下标；vector 中 it-maxF.begin() 才得到下标。end 指向最后一个元素之后，空区间会返回 end，不能对它使用 *；本题保证数组非空，所以可以直接取值。
+
+算法不要求先排序，也不会修改 maxF；最后再扫描一次仍是 O(n) 时间，和逐步更新 res 等价。完整语法、min_element 对照、重复最大值与空区间规则见 [C++ 语法笔记的极值查找](../01-cpp语法知识文档.md#26-max_element-与-min_element-找极值元素)。
 
 ## long 与极小负积保护
 
