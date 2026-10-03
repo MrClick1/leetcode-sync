@@ -35,6 +35,7 @@
 |---|---|---|
 | 416. 分割等和子集 | 一维 0/1 背包 DP 已力扣通过；倒序保留上一轮状态、每个元素最多一次 | [2026-10-03/0416-partition-equal-subset-sum.md](2026-10-03/0416-partition-equal-subset-sum.md) |
 | 32. 最长有效括号三种解法复盘 | DP、下标栈、双向计数均已力扣通过；状态与边界仍待巩固 | [2026-10-03/0032-longest-valid-parentheses.md](2026-10-03/0032-longest-valid-parentheses.md) |
+| 64. 最小路径和 | 一维滚动数组已力扣通过；首行累计、上方旧状态与左方新状态 | [2026-10-03/0064-minimum-path-sum.md](2026-10-03/0064-minimum-path-sum.md) |
 
 ## 2026-10-02
 
