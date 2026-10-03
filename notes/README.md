@@ -34,7 +34,7 @@
 | 题目 | 状态 | 笔记 |
 |---|---|---|
 | 416. 分割等和子集 | 一维 0/1 背包 DP 已力扣通过；倒序保留上一轮状态、每个元素最多一次 | [2026-10-03/0416-partition-equal-subset-sum.md](2026-10-03/0416-partition-equal-subset-sum.md) |
-| 32. 最长有效括号 DP 二刷 | 已力扣通过；以 i 结尾、匹配位置 k、dp[k-1] 累积前段待巩固 | [2026-10-03/0032-longest-valid-parentheses.md](2026-10-03/0032-longest-valid-parentheses.md) |
+| 32. 最长有效括号 DP 与栈二刷 | 两种实现均已力扣通过；栈空重设边界已修复，官解后续复习暂缓 | [2026-10-03/0032-longest-valid-parentheses.md](2026-10-03/0032-longest-valid-parentheses.md) |
 
 ## 2026-10-02
 
