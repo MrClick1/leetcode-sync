@@ -33,7 +33,7 @@
 
 | 题目 | 状态 | 笔记 |
 |---|---|---|
-| 5. 最长回文子串 | 二维区间 DP 已力扣通过；基础情况、倒序依赖与子串复制开销待巩固 | [2026-10-04/0005-longest-palindromic-substring.md](2026-10-04/0005-longest-palindromic-substring.md) |
+| 5. 最长回文子串 | 二维区间 DP 已力扣通过；起点倒序与官解长度升序对照、短区间及复制开销待巩固 | [2026-10-04/0005-longest-palindromic-substring.md](2026-10-04/0005-longest-palindromic-substring.md) |
 
 ## 2026-10-03
 
