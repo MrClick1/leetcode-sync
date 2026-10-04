@@ -82,13 +82,86 @@ nums.resize(100);  // 元素数量变为 100
 ```cpp
 string s = "hello";
 
-s.size();          // 字符数量，返回 size_t
+s.size();          // char 元素数量，返回 size_t
+s.length();        // 与 size() 等价，返回 size_t
 s.empty();         // 是否为空
 s[0];              // 读取或修改字符，不检查越界
 s.at(0);           // 越界时抛出异常
 s.push_back('!');  // 末尾添加字符
 s.pop_back();      // 删除末尾字符
 ```
+
+#### `at(下标)`：读取字符、修改字符与字符副本
+
+2026-10-04，1143. 最长公共子序列官解使用 text1.at(i-1)。at() 是 string 的成员函数，点号表示通过字符串对象调用成员函数，括号里传的是整数下标，不是迭代器。
+
+```cpp
+string text1 = "abcde";
+
+text1.at(0); // 'a'
+text1.at(2); // 'c'
+text1[2];    // 合法下标下，同样读取 'c'
+
+int i = 3;                  // 前缀长度为 3，即 "abc"
+char c1 = text1.at(i - 1);   // 最后一个字符的下标是 2，c1 为 'c'
+```
+
+读取实际字符时，合法下标为 0..s.size()-1。at(pos) 会检查范围，pos>=s.size() 时抛出 std::out_of_range；空字符串没有合法的 at 字符下标。
+
+```cpp
+string s = "abcde";
+// s.at(5); // 抛出 std::out_of_range，合法下标为 0～4
+```
+
+operator[] 不提供同样的异常检查。std::string 的 s[s.size()] 另有终止字符规则，见下方“字符下标与末尾终止字符”；不要把它与 at(s.size()) 混同，也不要把所有非法 [] 访问说成一定会崩溃。
+
+对非 const 字符串，at() 返回字符引用，可以直接修改对应位置。但是用 char 变量接收时，是复制字符；只有声明 char& 才保留引用关系：
+
+```cpp
+string s = "abcde";
+
+char ch = s.at(2);  // 复制 'c' 到 ch
+ch = 'Y';          // 只修改 ch，s 仍为 "abcde"
+
+s.at(2) = 'X';     // 直接修改字符串，s 为 "abXde"
+
+char& ref = s.at(2); // ref 引用字符串中的这个字符
+ref = 'Z';          // 修改对应字符，s 为 "abZde"
+```
+
+const string 的 at() 返回只读字符引用，不能通过它修改字符串。1143 官解的 char c1、char c2 都是副本，只用于比较字符，并不修改原字符串。
+
+#### `length()` 与 `size()`：长度、末尾下标和返回类型
+
+2026-10-04，用户询问 string::length()。它不需要参数，调用时仍需括号；对 string，length() 与 size() 返回相同长度，两者均为常数时间操作。
+
+```cpp
+string s = "abcde";
+s.length(); // 5
+s.size();   // 5
+
+string emptyString;
+emptyString.length(); // 0
+```
+
+长度是 char 元素数量；本题每个小写英文字母对应一个 char。长度不等于最后一个下标："abcde" 长度为 5，实际字符下标为 0、1、2、3、4。只有字符串非空时，最后一个实际字符下标才是长度减 1；空字符串没有实际字符可访问。
+
+length() 与 size() 都返回 size_t，在此为无符号整数类型。本题长度不超过 1000，转换成 int 后用于下标循环是安全的：
+
+```cpp
+int n = (int)s.length();             // 用户常用写法
+int n2 = static_cast<int>(s.size()); // C++ 命名转换写法
+```
+
+更完整的类型转换与无符号减法规则见本文件“3.4 size_t、int 与类型转换”。不要把“字符串有 length()”推广到所有容器：
+
+```cpp
+vector<int> nums = {1, 2, 3};
+nums.size();      // 3
+// nums.length(); // 编译错误，vector 没有 length() 成员函数
+```
+
+相关算法与官解对照见 [1143 的复盘](2026-10-04/1143-longest-common-subsequence.md)。本次为语法说明与静态核对，没有新增本地编译测试。
 
 #### 构造重复字符的一行与二维字符棋盘
 
@@ -1955,7 +2028,7 @@ for (char c : t) {
 
 ### 3.4 `size_t`、`int` 与类型转换
 
-`vector::size()` 和 `string::size()` 返回无符号类型 `size_t`。
+`vector::size()`、`string::size()` 和 `string::length()` 返回无符号类型 `size_t`。
 
 `static_cast<目标类型>(值)` 是 C++ 的显式类型转换语法。它会产生一个转换后的新值，不会修改原变量：
 
@@ -2539,6 +2612,10 @@ long long integerPow(long long base, int exponent) {
 | 需求 | 写法 | 注意 |
 |---|---|---|
 | `vector` 元素数量 | `nums.size()` | 返回 `size_t` |
+| `string` 长度 | `s.length()` / `s.size()` | 两者等价，返回 `size_t`；非空时最后下标为长度减 1 |
+| 带范围检查访问字符 | `s.at(pos)` | pos>=size() 抛出 std::out_of_range；合法下标下与 [] 取值相同 |
+| 修改已有字符 | `s.at(pos) = ch` | 非 const 字符串，pos 必须合法；不会增加字符串长度 |
+| 保存字符副本或引用 | `char ch=s.at(pos)` / `char& ref=s.at(pos)` | 前者复制字符，后者引用原字符 |
 | `string` 截取子串 | `s.substr(start, length)` | 第二个参数是长度 |
 | 截取闭区间 `[left,right]` | `s.substr(left, right-left+1)` | 包含 `right`，所以长度加一 |
 | 截取半开区间 `[left,right)` | `s.substr(left, right-left)` | 不包含 `right` |
