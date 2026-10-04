@@ -35,6 +35,7 @@
 |---|---|---|
 | 5. 最长回文子串 | 二维区间 DP 已力扣通过；起点倒序与官解长度升序对照、短区间及复制开销待巩固 | [2026-10-04/0005-longest-palindromic-substring.md](2026-10-04/0005-longest-palindromic-substring.md) |
 | 1143. 最长公共子序列 | 二维前缀 DP 已力扣通过；匹配与跳过、完整前缀返回、官解初始化及 at 访问对照 | [2026-10-04/1143-longest-common-subsequence.md](2026-10-04/1143-longest-common-subsequence.md) |
+| 136. 只出现一次的数字（二刷） | 用户累计异或已力扣通过；C++17 3933 个输入复核，成对抵消与 ^= 语法 | [2026-10-04/0136-single-number.md](2026-10-04/0136-single-number.md) |
 
 ## 2026-10-03
 
