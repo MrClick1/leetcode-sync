@@ -34,6 +34,7 @@
 | 题目 | 状态 | 笔记 |
 |---|---|---|
 | 5. 最长回文子串 | 二维区间 DP 已力扣通过；起点倒序与官解长度升序对照、短区间及复制开销待巩固 | [2026-10-04/0005-longest-palindromic-substring.md](2026-10-04/0005-longest-palindromic-substring.md) |
+| 1143. 最长公共子序列 | 二维前缀 DP 已力扣通过；相等接左上加 1、不等继承上或左、完整前缀返回 | [2026-10-04/1143-longest-common-subsequence.md](2026-10-04/1143-longest-common-subsequence.md) |
 
 ## 2026-10-03
 
