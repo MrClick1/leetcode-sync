@@ -29,6 +29,12 @@
 | 回溯 | [topics/14-回溯.md](topics/14-回溯.md) |
 | 动态规划 | [topics/15-动态规划.md](topics/15-动态规划.md) |
 
+## 2026-10-04
+
+| 题目 | 状态 | 笔记 |
+|---|---|---|
+| 5. 最长回文子串 | 二维区间 DP 已力扣通过；基础情况、倒序依赖与子串复制开销待巩固 | [2026-10-04/0005-longest-palindromic-substring.md](2026-10-04/0005-longest-palindromic-substring.md) |
+
 ## 2026-10-03
 
 | 题目 | 状态 | 笔记 |
