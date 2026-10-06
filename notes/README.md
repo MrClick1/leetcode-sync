@@ -229,7 +229,7 @@
 | 题目 | 状态 | 笔记 |
 |---|---|---|
 | 136. 只出现一次的数字 | ✅ 已解决 | [2026-08-14/0136-single-number.md](2026-08-14/0136-single-number.md) |
-| 208. 实现 Trie | ⚠️ 未完全掌握（需巩固） | [2026-08-14/0208-implement-trie-prefix-tree.md](2026-08-14/0208-implement-trie-prefix-tree.md) |
+| 208. 实现 Trie | 用户 `Node + root` 版已通过；2026-10-06 标记官解无 `root`、`this` 与遍历指针待复盘 | [2026-08-14/0208-implement-trie-prefix-tree.md](2026-08-14/0208-implement-trie-prefix-tree.md) |
 
 ## 2026-08-13
 
