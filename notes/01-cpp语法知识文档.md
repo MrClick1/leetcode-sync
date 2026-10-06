@@ -34,6 +34,77 @@ nums.at(i);        // 越界时抛出异常
 nums.clear();      // 删除全部元素
 ```
 
+#### resize 与 assign
+
+2026-10-06：结合 207、210 课程表中邻接表、访问状态的初始化复习。
+
+`resize` 调整元素数量，保留仍在范围内的旧元素；`assign` 替换全部内容。两者直接修改当前 vector，返回类型都是 void。
+
+```cpp
+vector<int> v = {1, 2, 3};
+v.resize(5, 9); // [1,2,3,9,9]，只给新增元素填 9
+v.resize(5, 0); // [1,2,3,9,9]，大小相同，不做修改
+v.resize(2);    // [1,2]，删除末尾元素
+v.resize(4);    // [1,2,0,0]，普通 vector<int> 新增元素为 0
+v.assign(4, 7);// [7,7,7,7]，旧内容被替换
+```
+
+`resize(n)` 与 `resize(n, value)` 的区别在扩容时体现；缩小时都删除尾部，多余的 value 不用于重置保留下来的元素。缩小 size 不意味着 capacity 同步缩小。
+
+assign 的常见重载：
+
+```cpp
+v.assign(3, 8);                 // [8,8,8]，数量和数值
+v.assign({3, 1, 4});            // [3,1,4]，初始化列表
+vector<int> source = {5,6,7,8};
+v.assign(source.begin() + 1, source.end()); // [6,7,8]，复制半开区间
+```
+
+区间重载使用另一个容器的合法迭代器，右端点不包含在内。不要把 assign 写成 append：它替换旧内容，不是在末尾追加。
+
+二维 vector 中，每个元素也是一个 vector：
+
+```cpp
+vector<vector<int>> edges;
+edges.resize(3);                // [[],[],[]]，新增三个空列表
+edges[0].push_back(1);
+edges.resize(3);                // 保留原来的边，不会清空 edges[0]
+edges.assign(3, vector<int>{}); // [[],[],[]]，重新创建三份空列表
+
+vector<vector<int>> grid;
+grid.assign(2, vector<int>(3, 0)); // 两行三列，全部为 0
+```
+
+只有外层 resize(3) 时不能直接访问 edges[0][0]：内层仍为空。二维 vector 的各行是独立对象，不是共享同一行。
+
+课程表成员变量的重复调用初始化：
+
+```cpp
+edges.assign(numCourses, vector<int>{});
+visited.assign(numCourses, 0);
+res.clear();
+valid = true;
+```
+
+`visited.resize(numCourses, 0)` 不能保证旧的 1、2 状态被清零；`edges.resize(numCourses)` 也不能保证旧边被移除。若使用函数内局部变量，直接构造即可：
+
+```cpp
+vector<vector<int>> edges(numCourses);
+vector<int> visited(numCourses, 0);
+```
+
+| 需求 | 写法 |
+|---|---|
+| 保留已有元素，调整数量 | v.resize(n) |
+| 全部重置为 n 个 value | v.assign(n, value) |
+| 只覆盖已有元素，不改变数量 | fill(v.begin(), v.end(), value) |
+| 删除全部元素，使 size 为 0 | v.clear() |
+| 预留容量，不创建元素 | v.reserve(n) |
+
+例如空 vector 调用 reserve(10) 后 size 仍是 0，不能访问 v[0]；调用 resize(10) 后 size 才是 10。
+
+对 vector<int>，resize 大小不变是常数操作；缩小要处理被删除元素，扩大要初始化新增元素，若重新分配还需迁移旧元素，不能一概认为 O(1)。assign(n,value) 通常按线性规模替换内容；二维容器还需计入内层元素的复制和销毁。修改容器后不要盲目继续使用旧迭代器或引用：assign 会使旧的失效，resize 重新分配时也会使全部旧迭代器和引用失效。
+
 #### 一次添加多个元素
 
 `push_back` 一次只能添加一个 `vector` 元素。`vector<int>` 的元素类型是 `int`：
