@@ -257,4 +257,4 @@
 | 48. 旋转图像 | ✅ 已解决 | [2026-08-11/0048-rotate-image.md](2026-08-11/0048-rotate-image.md) |
 | 54. 螺旋矩阵 | ✅ 已解决 | [2026-08-11/0054-spiral-matrix.md](2026-08-11/0054-spiral-matrix.md) |
 | 73. 矩阵置零 | ✅ 已解决 | [2026-08-11/0073-set-matrix-zeroes.md](2026-08-11/0073-set-matrix-zeroes.md) |
-| 240. 搜索二维矩阵 II | ✅ 已解决 | [2026-08-11/0240-search-a-2d-matrix-ii.md](2026-08-11/0240-search-a-2d-matrix-ii.md) |
+| 240. 搜索二维矩阵 II | ✅ 2026-10-06 右上角阶梯搜索二刷通过；排除剩余区域的一行或一列 | [2026-08-11/0240-search-a-2d-matrix-ii.md](2026-08-11/0240-search-a-2d-matrix-ii.md) |
