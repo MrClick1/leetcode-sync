@@ -1927,6 +1927,105 @@ if (it != values.end()) {
 
 记忆时把 `max_element` 看成“找到最大元素的位置”，把 `*` 看成“取出该位置的元素”。
 
+### 2.7 upper_bound 与二分查找函数
+
+2026-10-06，来自 74 搜索二维矩阵的官解。`std::upper_bound` 位于 `<algorithm>`，在升序区间中查找第一个严格大于目标值的元素，返回它的迭代器。它不会替你排序，也不会修改原容器。
+
+#### 基本用法与返回值
+
+```cpp
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+vector<int> nums = {1, 3, 3, 5, 8};
+auto it = upper_bound(nums.begin(), nums.end(), 3);
+
+// it 指向 5，返回的是位置，不是数值或整数下标
+if (it != nums.end()) {
+    int value = *it;               // 5
+    auto index = it - nums.begin(); // 3，适用于 vector 的迭代器
+}
+```
+
+搜索范围是 `[first,last)`：包含 first，不包含 last。整个容器通常传入 begin()、end()。
+
+| target | 第一个严格大于 target 的元素 | 返回位置 |
+|---|---|---|
+| 0 | 1 | begin()，下标 0 |
+| 3 | 5 | 下标 3，跳过两个等于 3 的元素 |
+| 4 | 5 | 下标 3，target 本身不存在也能找到边界 |
+| 8 | 没有 | end() |
+| 10 | 没有 | end() |
+
+没有符合条件的元素时返回传入的 last，空区间也返回 last。`end()` 是末尾之后的位置，不能写 `*nums.end()`；函数也不会返回 -1 或 nullptr。对整个 vector 查找时，`it-nums.begin()` 若等于 size()，只代表边界下标，不能用它访问元素。
+
+#### 与 lower_bound 和 binary_search 对比
+
+以下含义适用于默认比较的升序区间：
+
+| 函数 | 寻找内容 | 返回类型 |
+|---|---|---|
+| lower_bound(first,last,x) | 第一个 >= x 的元素 | 迭代器 |
+| upper_bound(first,last,x) | 第一个 > x 的元素 | 迭代器 |
+| binary_search(first,last,x) | x 是否存在 | bool |
+
+```cpp
+// nums = {1, 3, 3, 5, 8}
+auto lo = lower_bound(nums.begin(), nums.end(), 3); // 指向第一个 3
+auto hi = upper_bound(nums.begin(), nums.end(), 3); // 指向 5
+bool exists = binary_search(nums.begin(), nums.end(), 3); // true
+auto count = hi - lo; // 2：vector 中 3 的出现次数
+```
+
+lower_bound 找到的位置也可能指向更大的值，不能只凭它不等于 end() 就判断目标存在，还需要检查 `*lo == x`。
+
+#### 找最后一个不大于目标的位置
+
+先找到第一个 > target 的位置，再退一步，就是最后一个 <= target 的位置。
+
+```cpp
+auto it = upper_bound(nums.begin(), nums.end(), target);
+if (it == nums.begin()) {
+    // 没有 <= target 的元素，不能执行 --it
+} else {
+    --it;
+    // *it 是最后一个 <= target 的元素
+}
+```
+
+非空 vector 的 end() 可以减一指向最后一个元素；begin() 不能减一。上面的检查也能覆盖空 vector，因为空容器 begin()==end()。
+
+#### 二维矩阵与自定义比较函数
+
+```cpp
+auto row = upper_bound(
+    matrix.begin(), matrix.end(), target,
+    [](int value, const vector<int>& currentRow) {
+        return value < currentRow[0];
+    }
+);
+if (row == matrix.begin()) return false;
+--row;
+return binary_search(row->begin(), row->end(), target);
+```
+
+matrix 的每个元素是一整行。这里 upper_bound 调用比较器的顺序为 `comp(目标值, 当前元素)`，所以 value 是 target、currentRow 是某一行。返回 true 表示该行首元素 > target；函数二分寻找第一个满足这一条件的行。
+
+对于首列 [1,10,23] 和 target=13，比较结果为 false、false、true。row 先指向首元素 23 的行，`--row` 后指向首元素 10 的候选行。`row->begin()` 等价于 `(*row).begin()`：取得候选行内部的起始迭代器。
+
+`[]` 表示 lambda 不捕获外部变量，参数 value 由算法传入，不需要额外捕获 target。为便于理解，优先使用 value/currentRow 这样的参数名。
+
+自定义比较器的顺序不要与 lower_bound 混淆：lower_bound 使用 `comp(当前元素, 目标值)`，寻找第一个使其为 false 的位置；upper_bound 使用 `comp(目标值, 当前元素)`，寻找第一个使其为 true 的位置。
+
+#### 顺序要求与复杂度
+
+初学时在升序数组上使用默认比较。更一般地，upper_bound 要求区间对本次比较形成前面不满足、后面满足的分区；自定义比较也必须与区间组织方式一致，不能对任意乱序数据直接二分。
+
+对 vector、普通数组等随机访问区间，查找时间 O(log N)，额外空间 O(1)。泛型算法用于 list 等非随机访问迭代器时，比较次数仍为对数级，但迭代器移动可能达到 O(N)；set/map 查边界优先使用容器的成员 upper_bound。
+
+74 题函数参数应使用 `const vector<vector<int>>& matrix` 或非 const 引用。若按值接收整个矩阵，普通调用会复制它，增加 O(m*n) 时间与空间，掩盖两次二分本身的 O(log m + log n) 时间和 O(1) 额外空间。
+
 ## 3. 其他重要语法
 
 ### 3.1 函数参数：值、引用与 `const` 引用
@@ -2856,6 +2955,9 @@ n=16 时，前者把 false 转成 0，得到 `16 & 0`，返回 bool 时是 false
 | 查找区间最大元素 | `max_element(first, last)` | 返回迭代器；并列时选第一个 |
 | 读取区间最大值 | `*max_element(first, last)` | 区间必须非空，空区间不能解引用 |
 | 查找区间最小元素 | `min_element(first, last)` | 返回迭代器；区间为 `[first,last)` |
+| 找第一个严格大于目标的元素 | `upper_bound(first,last,x)` | 升序区间；返回迭代器，无匹配返回 last |
+| 找第一个大于等于目标的元素 | `lower_bound(first,last,x)` | 升序区间；不一定匹配目标值 |
+| 判断目标是否存在 | `binary_search(first,last,x)` | 升序区间；返回 bool |
 
 ### 其他语法
 
