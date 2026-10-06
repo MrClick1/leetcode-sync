@@ -173,7 +173,7 @@
 | 题目 | 状态 | 笔记 |
 |---|---|---|
 | 84. 柱状图中最大的矩形 | ✅ 已解决 | [2026-09-03/0084-largest-rectangle-in-histogram.md](2026-09-03/0084-largest-rectangle-in-histogram.md) |
-| 295. 数据流的中位数 | ✅ 已解决 | [2026-09-03/0295-find-median-from-data-stream.md](2026-09-03/0295-find-median-from-data-stream.md) |
+| 295. 数据流的中位数 | ✅ 2026-10-06 双堆简化版已力扣通过；数量调整条件与搬运堆顶已修正 | [2026-09-03/0295-find-median-from-data-stream.md](2026-09-03/0295-find-median-from-data-stream.md) |
 
 ## 2026-09-02
 

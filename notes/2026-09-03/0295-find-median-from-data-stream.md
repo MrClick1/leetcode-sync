@@ -1,8 +1,58 @@
 # 295. 数据流的中位数 —— 复盘笔记
 
-状态：✅ 已解决（本地固定测试、大规模测试和 10000 组随机数据流对拍通过）
+状态：✅ 2026-10-06 用户双堆简化版已力扣通过；2026-09-03 旧版本的本地验证记录保留在下方。
 
-## 当前解答与核心思路
+## 2026-10-06 二刷通过版本
+
+本次直接使用两个堆的 `size()`，在插入的分支内调整数量。以下保留用户变量名，注释明确堆的角色。
+
+```cpp
+class MedianFinder {
+    // 较小的一半，实际为大顶堆
+    priority_queue<int, vector<int>, less<int>> minQue;
+    // 较大的一半，实际为小顶堆
+    priority_queue<int, vector<int>, greater<int>> maxQue;
+
+public:
+    MedianFinder() {}
+
+    void addNum(int num) {
+        if (minQue.empty() || num <= minQue.top()) {
+            minQue.push(num);
+            if (minQue.size() > maxQue.size() + 1) {
+                maxQue.push(minQue.top());
+                minQue.pop();
+            }
+        } else {
+            maxQue.push(num);
+            if (maxQue.size() > minQue.size()) {
+                minQue.push(maxQue.top());
+                maxQue.pop();
+            }
+        }
+    }
+
+    double findMedian() {
+        if (minQue.size() == maxQue.size()) {
+            return (minQue.top() + maxQue.top()) / 2.0;
+        }
+        return minQue.top();
+    }
+};
+```
+
+两条不变量：左堆所有数不大于右堆所有数；左堆数量与右堆相同或多一个。每次只加入一个数字，最多移动一个堆顶就能恢复平衡。
+
+本轮修正的两处错误：
+
+- 右堆调整条件曾写为 `maxQue.size() > minQue.size() - 1`。添加 1、2 后数量本来是 1/1，却因 `1 > 0` 把 2 搬到左堆，查询得到 2 而非 1.5。正确条件是右堆数量严格大于左堆。
+- 搬运曾写为 `minQue.push(num); maxQue.pop();`。修正条件后，添加 1、2、3 会在右堆保存 {2,3}；插入新数 3 却弹出堆顶 2，会丢掉 2 并重复保存 3。必须先 `push(maxQue.top())`，再 `pop()`，搬运同一个元素。
+
+注释不要把右堆描述成“所有数都严格大于中位数”：重复值可能同时出现在两边，例如输入 [2,2]。使用“较小的一半”和“较大的一半”更准确。本题数值范围为 [-100000,100000]，两个堆顶相加不会超出 int，除以 `2.0` 能保留小数。
+
+`addNum` 时间 O(log n)，`findMedian` 时间 O(1)，两个堆总空间 O(n)。本轮通过状态来自用户明确的力扣反馈，下方历史测试不作为这份新代码的测试结果。
+
+## 2026-09-03 解答与核心思路
 
 当前 `solution.cpp` 保留用户自己完成的双堆实现：使用 `lsize`、`rsize` 记录数量，并分别处理首次插入、右堆为空和两个堆都非空的情况。本次只删除未使用的 `largerMid`，整理注释与格式，没有用下方模板覆盖原算法。
 
@@ -155,7 +205,7 @@ public:
 - `findMedian`：O(1)，只读取数量和堆顶。
 - 额外空间：O(n)，所有输入数字保存在两个堆中。
 
-## 本次验证
+## 2026-09-03 本地验证
 
 - 当前解答通过全部固定测试，包括官方示例、单个元素、奇偶数量、递增递减、负数、小数中位数、重复值、极值、重复查询和独立对象。
 - 补入 `[5, 1, 2]` 回归用例；`[1, 2, 3, 4]` 和 `[6, 5, 4]` 已由递增、递减数据流的逐次查询覆盖。
